@@ -8,14 +8,10 @@ defmodule Mix.Tasks.Connect.RecreateSchema do
 
     tables()
     |> Enum.each(fn table ->
-      case Db.exec(table) do
-        {:ok, _} ->
-          nil
-
-        {:error, error} ->
-          Mix.shell().info(">>> An error occured:\n#{error.reason}: #{error.message}\n#{table}")
-      end
+      Db.Base.exec(table)
     end)
+
+    Mix.Task.run("connect.create_schema")
   end
 
   defp tables do
