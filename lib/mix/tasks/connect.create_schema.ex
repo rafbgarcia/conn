@@ -14,7 +14,6 @@ defmodule Mix.Tasks.Connect.CreateSchema do
           Mix.shell().info(">>> An error occured:\n#{error.reason}: #{error.message}\n#{table}")
       end
     end)
-    Mix.shell().info("Success")
   end
 
   defp schema do

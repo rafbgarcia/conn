@@ -14,8 +14,6 @@ defmodule Mix.Tasks.Connect.RecreateSchema do
           Mix.shell().info(">>> An error occured:\n#{error.reason}: #{error.message}\n#{table}")
       end
     end)
-
-    Mix.Task.run("connect.create_schema")
   end
 
   defp tables do
