@@ -9,7 +9,9 @@ defmodule Mix.Tasks.Connect.CreateSchema do
     schema()
     |> Enum.each(fn table ->
       case Db.exec(table) do
-        {:ok, _} -> nil
+        {:ok, _} ->
+          nil
+
         {:error, error} ->
           Mix.shell().info(">>> An error occured:\n#{error.reason}: #{error.message}\n#{table}")
       end
@@ -131,7 +133,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         channel_id int,
         PRIMARY KEY(event_id, position)
       );
-      """,
+      """
     ]
   end
 end

@@ -11,7 +11,12 @@ defmodule Db do
     keyspace = Keyword.fetch!(config, :keyspace)
 
     {:ok, conn} = Xandra.start_link(nodes: nodes, protocol_version: :v4, atom_keys: true)
-    conn |> Xandra.execute("CREATE KEYSPACE IF NOT EXISTS #{keyspace} WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 }")
+
+    conn
+    |> Xandra.execute(
+      "CREATE KEYSPACE IF NOT EXISTS #{keyspace} WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 }"
+    )
+
     conn |> Xandra.execute("USE #{keyspace}")
     conn
   end

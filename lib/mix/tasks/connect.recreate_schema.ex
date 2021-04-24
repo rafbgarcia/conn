@@ -9,7 +9,9 @@ defmodule Mix.Tasks.Connect.RecreateSchema do
     tables()
     |> Enum.each(fn table ->
       case Db.exec(table) do
-        {:ok, _} -> nil
+        {:ok, _} ->
+          nil
+
         {:error, error} ->
           Mix.shell().info(">>> An error occured:\n#{error.reason}: #{error.message}\n#{table}")
       end
@@ -27,7 +29,7 @@ defmodule Mix.Tasks.Connect.RecreateSchema do
       "DROP TABLE IF EXISTS bookmarks",
       "DROP TABLE IF EXISTS events",
       "DROP TABLE IF EXISTS event_sections",
-      "DROP TABLE IF EXISTS event_items",
+      "DROP TABLE IF EXISTS event_items"
     ]
   end
 end
