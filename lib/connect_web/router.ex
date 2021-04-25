@@ -19,10 +19,15 @@ defmodule ConnectWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ConnectWeb do
-  #   pipe_through :api
-  # end
+  scope "/api" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: ConnectWeb.Schema,
+      socket: ConnectWeb.UserSocket
+
+    forward "/", Absinthe.Plug, schema: ConnectWeb.Schema
+  end
 
   # Enables LiveDashboard only for development
   #

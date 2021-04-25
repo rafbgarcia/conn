@@ -1,5 +1,6 @@
 defmodule ConnectWeb.UserSocket do
   use Phoenix.Socket
+  use Absinthe.Phoenix.Socket, schema: ConnectWeb.Schema
 
   ## Channels
   # channel "room:*", ConnectWeb.RoomChannel

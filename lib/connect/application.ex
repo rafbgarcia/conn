@@ -12,7 +12,8 @@ defmodule Connect.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Connect.PubSub},
       # Start the Endpoint (http/https)
-      ConnectWeb.Endpoint
+      ConnectWeb.Endpoint,
+      {Absinthe.Subscription, ConnectWeb.Endpoint}
       # Start a worker by calling: Connect.Worker.start_link(arg)
       # {Connect.Worker, arg}
     ]
