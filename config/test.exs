@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :connect, :xandra,
+config :connect, :db,
   nodes: ["127.0.0.1:9042"],
   keyspace: "connect_test"
 

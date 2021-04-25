@@ -6,26 +6,12 @@ defmodule Mix.Tasks.Connect.RecreateSchema do
   def run(_args) do
     Mix.Task.run("app.start")
 
-    tables()
-    |> Enum.each(fn table ->
-      Db.Base.exec(table)
-    end)
+    Enum.each(tables(), &Db.Base.exec/1)
 
     Mix.Task.run("connect.create_schema")
   end
 
   defp tables do
-    [
-      "DROP TABLE IF EXISTS servers",
-      "DROP TABLE IF EXISTS accounts",
-      "DROP TABLE IF EXISTS members",
-      "DROP TABLE IF EXISTS channels",
-      "DROP TABLE IF EXISTS channel_members",
-      "DROP TABLE IF EXISTS messages",
-      "DROP TABLE IF EXISTS bookmarks",
-      "DROP TABLE IF EXISTS events",
-      "DROP TABLE IF EXISTS event_sections",
-      "DROP TABLE IF EXISTS event_items"
-    ]
+    Enum.map(Db.Base.table_names(), &"DROP TABLE IF EXISTS #{&1}")
   end
 end
