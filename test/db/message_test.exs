@@ -1,6 +1,6 @@
 defmodule Db.MessageTest do
   use ExUnit.Case
-  use ConnectTest.IntegrationCase, truncate_tables: [:messages]
+  use IntegrationCase, truncate_tables: [:messages]
 
   alias Db.{Message, UUID}
 
