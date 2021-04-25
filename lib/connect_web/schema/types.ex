@@ -9,6 +9,7 @@ defmodule ConnectWeb.Schema.Types do
   object :message do
     field(:id, :id)
     field(:channel_id, :string)
+    field(:author_id, :string)
     field(:content, :string)
   end
 end
