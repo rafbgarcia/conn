@@ -11,9 +11,11 @@ defmodule Mix.Tasks.Connect.CreateSchema do
   end
 
   defp schema do
+    keyspace = Db.Repo.keyspace()
+
     [
       """
-      CREATE TABLE IF NOT EXISTS servers(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.servers(
         id uuid,
         name text,
         config map<text, text>,
@@ -21,7 +23,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS accounts(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.accounts(
         server_id uuid,
         member_id int,
         login text,
@@ -32,7 +34,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS members(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.members(
         server_id uuid,
         id uuid,
         name text,
@@ -45,7 +47,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS channels(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.channels(
         server_id uuid,
         deleted boolean,
         id timeuuid,
@@ -61,7 +63,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS channel_members(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.channel_members(
         server_id uuid,
         channel_id timeuuid,
         member_id uuid,
@@ -72,7 +74,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS messages(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.messages(
         channel_id uuid,
         bucket text,
         id timeuuid,
@@ -88,43 +90,43 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       ) WITH CLUSTERING ORDER BY (id DESC);
       """,
       """
-      CREATE TABLE IF NOT EXISTS bookmarks(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.bookmarks(
         member_id int,
         channel_id uuid,
         last_message_at timestamp,
         PRIMARY KEY(member_id, last_message_at, channel_id)
       );
-      """,
       """
-      CREATE TABLE IF NOT EXISTS events(
-        server_id uuid,
-        id uuid,
-        position int,
-        image text,
-        PRIMARY KEY(server_id, position)
-      );
-      """,
-      """
-      CREATE TABLE IF NOT EXISTS event_sections(
-        event_id int,
-        id uuid,
-        name text,
-        position int,
-        PRIMARY KEY(event_id, position)
-      );
-      """,
-      """
-      CREATE TABLE IF NOT EXISTS event_items(
-        event_id int,
-        section_id int,
-        name text,
-        position int,
-        type text,
-        url text,
-        channel_id uuid,
-        PRIMARY KEY(event_id, position)
-      );
-      """
+      # """
+      # CREATE TABLE IF NOT EXISTS #{keyspace}.events(
+      #   server_id uuid,
+      #   id uuid,
+      #   position int,
+      #   image text,
+      #   PRIMARY KEY(server_id, position)
+      # );
+      # """,
+      # """
+      # CREATE TABLE IF NOT EXISTS #{keyspace}.event_sections(
+      #   event_id int,
+      #   id uuid,
+      #   name text,
+      #   position int,
+      #   PRIMARY KEY(event_id, position)
+      # );
+      # """,
+      # """
+      # CREATE TABLE IF NOT EXISTS #{keyspace}.event_items(
+      #   event_id int,
+      #   section_id int,
+      #   name text,
+      #   position int,
+      #   type text,
+      #   url text,
+      #   channel_id uuid,
+      #   PRIMARY KEY(event_id, position)
+      # );
+      # """
     ]
   end
 end
