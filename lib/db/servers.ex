@@ -1,15 +1,26 @@
-defmodule Db.Servers do
-  def create(%{name: name}) do
-    id = Db.UUID.uuid()
+defmodule Db.Server do
+  use Cassandrax.Schema
+  import Ecto.Changeset
 
-    Db.Base.exec(
-      "INSERT INTO servers (id, name) VALUES(:id, :name)",
-      %{
-        id: {"uuid", id},
-        name: {"text", name}
-      }
-    )
+  alias Db.{UUID, Server}
 
-    id
+  @primary_key [:id]
+
+  table "servers" do
+    field(:id, :string)
+    field(:name, :string)
+  end
+
+  def new(attrs) do
+    data =
+      attrs
+      |> Map.merge(%{
+        id: UUID.uuid()
+      })
+
+    cast(%Server{}, data, [
+      :id,
+      :name
+    ])
   end
 end

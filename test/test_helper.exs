@@ -8,11 +8,6 @@ defmodule ConnectTest.IntegrationCase do
             truncate_tables: Keyword.get(options, :truncate_tables, []),
             case_template: __MODULE__
           ] do
-      setup_all do
-        case_template = unquote(case_template)
-        case_template.create_schema()
-      end
-
       setup do
         case_template = unquote(case_template)
         case_template.truncate_tables(unquote(truncate_tables))
@@ -21,12 +16,25 @@ defmodule ConnectTest.IntegrationCase do
     end
   end
 
-  def create_schema do
-    Mix.Task.run("connect.create_schema")
-  end
-
   def truncate_tables(tables) do
     tables
-    |> Enum.each(&Db.Base.exec("TRUNCATE TABLE #{&1}"))
+    |> Enum.each(&({:ok, _} = Db.Repo.exec("TRUNCATE TABLE #{Db.Repo.keyspace()}.#{&1}")))
+  end
+end
+
+defmodule IntegrationCaseTest do
+  use ConnectTest.IntegrationCase, truncate_tables: [:messages]
+
+  alias Db.{Repo, Message, UUID}
+
+  describe "truncate_table" do
+    test "records created in one test case" do
+      Repo.insert!(Message.new(%{channel_id: UUID.uuid(), content: "hey", author_id: 2}))
+      assert Kernel.length(Repo.all(Message)) == 1
+    end
+
+    test "do not leak to other test cases" do
+      assert Kernel.length(Repo.all(Message)) == 0
+    end
   end
 end

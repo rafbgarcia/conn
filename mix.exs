@@ -42,9 +42,10 @@ defmodule Connect.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:xandra, "~> 0.13"},
+      {:cassandrax, "~> 0.0.3"},
       {:elixir_uuid, "~> 1.2"},
-      {:absinthe_phoenix, "~> 2.0"}
+      {:absinthe_phoenix, "~> 2.0"},
+      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false}
     ]
   end
 
@@ -56,7 +57,8 @@ defmodule Connect.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "connect.create_schema"]
+      setup: ["deps.get", "connect.create_schema"],
+      test_watch: ["test.watch --stale --max-failures 1 --trace"]
     ]
   end
 end

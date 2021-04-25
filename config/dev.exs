@@ -1,8 +1,6 @@
 use Mix.Config
 
-config :connect, :db,
-  nodes: ["127.0.0.1:9042"],
-  keyspace: "connect_dev"
+config :connect, :db, keyspace: "connect_dev"
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

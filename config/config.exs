@@ -17,6 +17,16 @@ config :connect, ConnectWeb.Endpoint,
 
 config :connect, ConnectWeb.Endpoint, pubsub_server: Connect.PubSub
 
+config :cassandrax, clusters: [Connect.Cluster]
+
+config :cassandrax, Connect.Cluster,
+  protocol_version: :v3,
+  atom_keys: true,
+  nodes: ["127.0.0.1:9042"],
+  pool_size: System.get_env("SCYLLA_POOL_SIZE") || 10,
+  username: System.get_env("SCYLLA_USER") || "scylla",
+  password: System.get_env("SCYLLA_PASSWORD") || "scylla"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

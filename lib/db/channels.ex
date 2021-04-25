@@ -1,20 +1,31 @@
-defmodule Db.Channels do
-  def create(%{server_id: server_id, name: name}) do
-    id = Db.UUID.timeuuid()
+defmodule Db.Channel do
+  use Cassandrax.Schema
+  import Ecto.Changeset
 
-    Db.Base.exec(
-      """
-      INSERT INTO channels (server_id, id, name, hidden)
-      VALUES(:server_id, :id, :name, :hidden)
-      """,
-      %{
-        server_id: {"uuid", server_id},
-        id: {"timeuuid", id},
-        name: {"text", name},
-        hidden: {"boolean", false}
-      }
-    )
+  alias Db.{UUID, Channel}
 
-    id
+  @primary_key [[:server_id, :deleted], :id]
+
+  table "channels" do
+    field(:server_id, :string)
+    field(:deleted, :boolean)
+    field(:id, :string)
+    field(:name, :string)
+  end
+
+  def new(attrs) do
+    data =
+      attrs
+      |> Map.merge(%{
+        id: UUID.timeuuid(),
+        deleted: false
+      })
+
+    cast(%Channel{}, data, [
+      :server_id,
+      :deleted,
+      :id,
+      :name
+    ])
   end
 end

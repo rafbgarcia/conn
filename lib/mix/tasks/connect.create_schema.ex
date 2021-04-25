@@ -7,9 +7,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
     Mix.Task.run("app.start")
 
     schema()
-    |> Enum.each(fn table ->
-      Db.Base.exec(table)
-    end)
+    |> Enum.each(&Db.Repo.exec/1)
   end
 
   defp schema do
@@ -49,7 +47,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """
       CREATE TABLE IF NOT EXISTS channels(
         server_id uuid,
-        hidden boolean,
+        deleted boolean,
         id timeuuid,
         name text,
         direct boolean,
@@ -59,7 +57,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         broadcaster_ids set<int>,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY((server_id, hidden), id)
+        PRIMARY KEY((server_id, deleted), id)
       );
       """,
       """
