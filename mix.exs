@@ -43,7 +43,8 @@ defmodule Connect.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:xandra, "~> 0.13"},
-      {:elixir_uuid, "~> 1.2"}
+      {:elixir_uuid, "~> 1.2"},
+      {:absinthe_phoenix, "~> 2.0"}
     ]
   end
 
