@@ -14,5 +14,6 @@ mix local.hex
 # Install Phoenix
 mix archive.install hex phx_new 1.5.8
 
-# Install deps
+# Setup project
+make start
 mix setup
