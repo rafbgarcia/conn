@@ -1,4 +1,4 @@
-defmodule Db.ApiTest do
+defmodule ConnectTest do
   use ConnectWeb.ConnCase, async: true
   import Connect.Factories
 
