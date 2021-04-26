@@ -12,21 +12,21 @@ defmodule ConnectTest do
       assert Kernel.length(messages) == 2
     end
 
-    def bucket(i) do
-      case i do
-        n when n <= 2 -> "20201"
-        n when n <= 4 -> "20202"
-        n when n <= 6 -> "20211"
-        _ -> "20212"
-      end
-    end
-
     test "messages order when fetching from different buckets" do
+      bucket = fn i ->
+        case i do
+          n when n <= 2 -> "20201"
+          n when n <= 4 -> "20202"
+          n when n <= 6 -> "20211"
+          _ -> "20212"
+        end
+      end
+
       channel_id = UUID.uuid1()
 
       Enum.each(0..8, fn i ->
         build(:message, channel_id: channel_id, content: "msg #{i}", author_id: 2)
-        |> Map.put(:bucket, bucket(i))
+        |> Map.put(:bucket, bucket.(i))
         |> insert
       end)
 
