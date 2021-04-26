@@ -12,6 +12,7 @@ defmodule Db.Message do
     field(:id, :string)
     field(:content, :string)
     field(:author_id, :integer)
+    field(:created_at, :utc_datetime)
   end
 
   def new(attrs) do
@@ -19,7 +20,8 @@ defmodule Db.Message do
       attrs
       |> Map.merge(%{
         id: UUID.timeuuid(),
-        bucket: bucket(Date.utc_today())
+        bucket: bucket(Date.utc_today()),
+        created_at: DateTime.utc_now()
       })
 
     cast(%Message{}, data, [
@@ -27,8 +29,10 @@ defmodule Db.Message do
       :bucket,
       :id,
       :content,
-      :author_id
+      :author_id,
+      :created_at
     ])
+    |> validate_required([:channel_id, :bucket, :author_id, :created_at])
   end
 
   # Messages partitions are split by (channel, bucket)

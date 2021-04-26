@@ -13,6 +13,7 @@ defmodule Db.MessageTest do
       assert message.channel_id == attrs.channel_id
       assert message.author_id == attrs.author_id
       assert message.content == attrs.content
+      assert is_struct(message.created_at)
     end
   end
 end

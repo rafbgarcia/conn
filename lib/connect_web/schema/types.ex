@@ -15,5 +15,6 @@ defmodule ConnectWeb.Schema.Types do
     field(:channel_id, :string)
     field(:author_id, :integer)
     field(:content, :string)
+    field(:created_at, :string)
   end
 end
