@@ -16,6 +16,6 @@ defmodule IntegrationCase do
 
   def truncate_tables(tables) do
     tables
-    |> Enum.each(&({:ok, _} = Db.Repo.exec("TRUNCATE TABLE #{Db.Repo.keyspace()}.#{&1}")))
+    |> Enum.each(&({:ok, _} = Db.Repo.cql("TRUNCATE TABLE #{Db.Repo.__keyspace__()}.#{&1}")))
   end
 end

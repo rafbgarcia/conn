@@ -10,10 +10,12 @@ defmodule ConnectWeb.Resolvers.Messages do
   #   {:ok, channels}
   # end
 
-  def create(_parent, args, _resolution) do
-    attrs = Map.put(args, :author_id, "123")
+  def create(_parent, args, %{context: %{current_user: current_user}}) do
+    attrs = Map.put(args, :author_id, current_user.id)
     message = Repo.insert!(Message.new(attrs))
 
     {:ok, message}
   end
+
+  def create(_parent, _args, _resolutions), do: {:error, :unauthorized}
 end

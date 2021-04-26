@@ -9,8 +9,9 @@ defmodule ConnectWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
+  pipeline :graphql do
     plug :accepts, ["json"]
+    plug ConnectWeb.GraphqlContext
   end
 
   scope "/", ConnectWeb do
@@ -20,7 +21,7 @@ defmodule ConnectWeb.Router do
   end
 
   scope "/api" do
-    pipe_through :api
+    pipe_through :graphql
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: ConnectWeb.Schema,

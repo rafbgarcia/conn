@@ -45,6 +45,8 @@ defmodule Connect.MixProject do
       {:cassandrax, "~> 0.0.3"},
       {:elixir_uuid, "~> 1.2"},
       {:absinthe_phoenix, "~> 2.0"},
+      {:guardian, "~> 2.1"},
+      {:bcrypt_elixir, "~> 2.0"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false}
     ]
   end

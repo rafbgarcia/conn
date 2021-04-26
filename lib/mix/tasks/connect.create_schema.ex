@@ -7,26 +7,30 @@ defmodule Mix.Tasks.Connect.CreateSchema do
     Mix.Task.run("app.start")
 
     schema()
-    |> Enum.each(&Db.Repo.exec/1)
+    |> Enum.each(&Db.Repo.cql/1)
   end
 
   defp schema do
-    keyspace = Db.Repo.keyspace()
+    keyspace = Db.Repo.__keyspace__()
 
     [
+      # `user_metadata` will be used to fetch additional fields
+      # from the GraphQL endpoint in Nitro, and also to select
+      # users by these fields (as with Audiences)
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.servers(
         id uuid,
         name text,
         config map<text, text>,
+        user_metadata map<text, text>,
         PRIMARY KEY (id)
       );
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.accounts(
         server_id uuid,
-        member_id int,
         login text,
+        user_id int,
         password text,
         created_at timestamp,
         edited_at timestamp,
@@ -34,15 +38,15 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS #{keyspace}.members(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.users(
         server_id uuid,
-        id uuid,
+        id int,
         name text,
         avatar text,
         active boolean,
-        metadata map<text, text>,
         created_at timestamp,
         edited_at timestamp,
+        metadata map<text, text>,
         PRIMARY KEY(server_id, id)
       );
       """,
@@ -63,14 +67,14 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
-      CREATE TABLE IF NOT EXISTS #{keyspace}.channel_members(
+      CREATE TABLE IF NOT EXISTS #{keyspace}.channel_users(
         server_id uuid,
         channel_id timeuuid,
-        member_id uuid,
+        user_id uuid,
         joined_at timestamp,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY(channel_id, joined_at, member_id)
+        PRIMARY KEY(channel_id, joined_at, user_id)
       );
       """,
       """
@@ -91,10 +95,10 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.bookmarks(
-        member_id int,
+        user_id int,
         channel_id uuid,
         last_message_at timestamp,
-        PRIMARY KEY(member_id, last_message_at, channel_id)
+        PRIMARY KEY(user_id, last_message_at, channel_id)
       );
       """
       # """

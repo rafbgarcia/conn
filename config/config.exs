@@ -17,15 +17,22 @@ config :connect, ConnectWeb.Endpoint,
 
 config :connect, ConnectWeb.Endpoint, pubsub_server: Connect.PubSub
 
+# Cassandrax
 config :cassandrax, clusters: [Connect.Cluster]
 
 config :cassandrax, Connect.Cluster,
   protocol_version: :v3,
-  atom_keys: true,
   nodes: ["127.0.0.1:9042"],
   pool_size: System.get_env("SCYLLA_POOL_SIZE") || 10,
   username: System.get_env("SCYLLA_USER") || "scylla",
-  password: System.get_env("SCYLLA_PASSWORD") || "scylla"
+  password: System.get_env("SCYLLA_PASSWORD") || "scylla",
+  write_options: [consistency: :local_quorum],
+  read_options: [consistency: :one]
+
+# Guardian
+config :connect, ConnectWeb.Guardian,
+  issuer: "connect",
+  secret_key: "hcAoS9VYkZrUAy1L4DI5xGNDeoiHuO7ds5zwBXff50etop5sVKPTJ6Aakx9E8y6v"
 
 # Configures Elixir's Logger
 config :logger, :console,

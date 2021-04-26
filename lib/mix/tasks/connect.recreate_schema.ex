@@ -6,12 +6,13 @@ defmodule Mix.Tasks.Connect.RecreateSchema do
   def run(_args) do
     Mix.Task.run("app.start")
 
-    Enum.each(drop_tables(), &Db.Repo.exec/1)
+    Enum.each(drop_tables(), &Db.Repo.cql/1)
 
     Mix.Task.run("connect.create_schema")
   end
 
   defp drop_tables do
-    Enum.map(Db.Repo.table_names(), &"DROP TABLE IF EXISTS #{&1}")
+    keyspace = Db.Repo.__keyspace__()
+    Enum.map(Db.Repo.table_names(), &"DROP TABLE IF EXISTS #{keyspace}.#{&1}")
   end
 end

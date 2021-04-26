@@ -10,6 +10,14 @@ defmodule ConnectWeb.Schema do
   end
 
   mutation do
+    field :login, :account do
+      arg(:server_id, non_null(:string))
+      arg(:login, non_null(:string))
+      arg(:password, non_null(:string))
+
+      resolve(&ConnectWeb.Resolvers.Auth.login/3)
+    end
+
     field :create_message, :message do
       arg(:channel_id, non_null(:string))
       arg(:content, non_null(:string))

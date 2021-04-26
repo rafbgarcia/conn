@@ -10,3 +10,6 @@ config :connect, ConnectWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Reduce the number of rounds so it does not slow down the test suite
+config :bcrypt_elixir, :log_rounds, 4
