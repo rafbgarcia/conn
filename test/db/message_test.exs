@@ -1,6 +1,5 @@
 defmodule Db.MessageTest do
   use ExUnit.Case
-  use IntegrationCase, truncate_tables: [:messages]
 
   alias Db.{Message, UUID}
 

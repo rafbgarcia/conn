@@ -1,4 +1,13 @@
-defmodule IntegrationCase do
+defmodule Connect.IntegrationCase do
+  @moduledoc """
+  This module is like database cleaner.
+
+  Example: to truncate `messages` and `channels` tables before every test case:
+
+  ```
+  use Connect.IntegrationCase, truncate_tables: [:messages, :channels]
+  ```
+  """
   use ExUnit.CaseTemplate
 
   using options do

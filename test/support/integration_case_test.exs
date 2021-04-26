@@ -1,5 +1,5 @@
-defmodule IntegrationCaseTest do
-  use IntegrationCase, truncate_tables: [:messages]
+defmodule Connect.IntegrationCaseTest do
+  use Connect.IntegrationCase, truncate_tables: [:messages]
 
   alias Db.{Repo, Message, UUID}
 
