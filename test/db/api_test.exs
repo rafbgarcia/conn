@@ -1,12 +1,11 @@
 defmodule Db.ApiTest do
   use ConnectWeb.ConnCase, async: true
-  use IntegrationCase, truncate_tables: [:messages, :accounts, :servers, :users]
 
-  alias Db.{Account, Server, User, Message, UUID, Api}
+  alias Db.{Account, Message, Api}
 
   describe ".messages_for_channel" do
     test "returns channel's messages" do
-      message = %{channel_id: UUID.uuid(), content: "hey", author_id: 2}
+      message = %{channel_id: UUID.uuid1(), content: "hey", author_id: 2}
       Db.Repo.insert!(Message.new(message))
       Db.Repo.insert!(Message.new(message))
 
@@ -16,16 +15,16 @@ defmodule Db.ApiTest do
   end
 
   test "fetches account from the db" do
-    server = Db.Repo.insert!(Server.new(%{name: "Power"}))
-    user = Db.Repo.insert!(User.new(%{id: 1, server_id: server.id, name: "Rafa"}))
-
     account =
       Db.Repo.insert!(
-        Account.new(%{server_id: server.id, user_id: user.id, login: "rafa", password: "1234"})
+        Account.new(%{server_id: UUID.uuid1(), user_id: 123, login: "rafa", password: "1234"})
       )
 
     db_account = Api.get_account(account.server_id, account.login)
     assert db_account.login == account.login
     assert db_account.server_id == account.server_id
+    assert db_account.user_id == account.user_id
+    assert db_account.password == account.password
+    assert Bcrypt.verify_pass("1234", db_account.password)
   end
 end
