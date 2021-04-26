@@ -1,15 +1,14 @@
 defmodule Db.ApiTest do
   use ConnectWeb.ConnCase, async: true
-
-  alias Db.{Repo, Account, Message}
+  import Connect.Factories
 
   describe ".messages_for_channel" do
     test "returns channel's messages" do
-      message = %{channel_id: UUID.uuid1(), content: "hey", author_id: 2}
-      Repo.insert!(Message.new(message))
-      Repo.insert!(Message.new(message))
+      channel_id = UUID.uuid1()
+      insert(:message, channel_id: channel_id)
+      insert(:message, channel_id: channel_id)
 
-      messages = Connect.messages_for_channel(message.channel_id)
+      messages = Connect.messages_for_channel(channel_id)
       assert Kernel.length(messages) == 2
     end
 
@@ -26,9 +25,9 @@ defmodule Db.ApiTest do
       channel_id = UUID.uuid1()
 
       Enum.each(0..8, fn i ->
-        message = Message.new(%{channel_id: channel_id, content: "msg #{i}", author_id: 2})
-        message = struct(Message, Map.put(message.changes, :bucket, bucket(i)))
-        Repo.insert!(message)
+        build(:message, channel_id: channel_id, content: "msg #{i}", author_id: 2)
+        |> Map.put(:bucket, bucket(i))
+        |> insert
       end)
 
       messages =
@@ -50,10 +49,7 @@ defmodule Db.ApiTest do
   end
 
   test "fetches account from the db" do
-    account =
-      Repo.insert!(
-        Account.new(%{server_id: Db.UUID.uuid(), user_id: 123, login: "rafa", password: "1234"})
-      )
+    account = insert(:account, password: "1234")
 
     db_account = Connect.get_account(account.server_id, account.login)
     assert db_account.login == account.login

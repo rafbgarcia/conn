@@ -6,26 +6,16 @@ defmodule ConnectWeb.LoginAndAuthTest do
   * Creates a message with token sent via the authorization header
   """
 
-  alias Db.{Repo, Account, Server, User}
+  import Connect.Factories
   use ConnectWeb.ConnCase
 
   def login do
-    server = Repo.insert!(Server.new(%{name: "Power"}))
-    current_user = Repo.insert!(User.new(%{id: 14497, server_id: server.id, name: "Rafa"}))
-
-    account =
-      Repo.insert!(
-        Account.new(%{
-          server_id: server.id,
-          user_id: current_user.id,
-          login: "rafa",
-          password: "1234"
-        })
-      )
+    user = insert(:user)
+    account = insert(:account, user_id: user.id, server_id: user.server_id, password: "123")
 
     query = """
     mutation {
-      login(serverId: "#{account.server_id}", login: "#{account.login}", password: "1234") {
+      login(serverId: "#{account.server_id}", login: "#{account.login}", password: "123") {
         token
       }
     }
@@ -33,7 +23,7 @@ defmodule ConnectWeb.LoginAndAuthTest do
 
     res = build_conn() |> post("/api", query: query) |> json_response(200)
     assert res["errors"] == nil
-    {res["data"]["login"]["token"], current_user}
+    {res["data"]["login"]["token"], user}
   end
 
   def create_message(token) do

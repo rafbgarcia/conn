@@ -1,18 +1,11 @@
 defmodule ConnectWeb.LoginTest do
-  alias Db.{Repo, Account, Server, User}
   use ConnectWeb.ConnCase
+  import Connect.Factories
 
   def login(wrong_pass \\ false) do
-    server = Repo.insert!(Server.new(%{name: "Power"}))
-    user = Repo.insert!(User.new(%{id: 1, server_id: server.id, name: "Rafa"}))
-    pass = "1234"
-
-    account =
-      Repo.insert!(
-        Account.new(%{server_id: server.id, user_id: user.id, login: "rafa", password: pass})
-      )
-
-    password = (wrong_pass && "wrong pass") || pass
+    user = insert(:user)
+    account = insert(:account, user_id: user.id, server_id: user.server_id, password: "1234")
+    password = (wrong_pass && "wrong pass") || "1234"
 
     query = """
     mutation {
@@ -29,13 +22,13 @@ defmodule ConnectWeb.LoginTest do
 
   test "succeeds for valid credentials" do
     res = login()
+
     assert res["errors"] == nil
     assert is_binary(res["data"]["login"]["token"])
   end
 
   test "fails for invalid credentials" do
     res = login(true)
-    assert res["errors"] != nil
 
     assert res["errors"] == [
              %{

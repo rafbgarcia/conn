@@ -13,10 +13,12 @@ defmodule Db.User do
   end
 
   def new(attrs) do
-    cast(%User{}, attrs, [
+    %User{}
+    |> cast(attrs, [
       :server_id,
       :id,
       :name
     ])
+    |> validate_required([:server_id, :id])
   end
 end
