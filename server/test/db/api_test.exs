@@ -1,7 +1,7 @@
 defmodule Db.ApiTest do
   use ConnectWeb.ConnCase, async: true
 
-  alias Db.{Repo, Account, Message, Api}
+  alias Db.{Repo, Account, Message}
 
   describe ".messages_for_channel" do
     test "returns channel's messages" do
@@ -9,7 +9,7 @@ defmodule Db.ApiTest do
       Repo.insert!(Message.new(message))
       Repo.insert!(Message.new(message))
 
-      messages = Api.messages_for_channel(message.channel_id)
+      messages = Connect.messages_for_channel(message.channel_id)
       assert Kernel.length(messages) == 2
     end
 
@@ -32,7 +32,7 @@ defmodule Db.ApiTest do
       end)
 
       messages =
-        Api.messages_for_channel(channel_id)
+        Connect.messages_for_channel(channel_id)
         |> Enum.map(&{&1.bucket, &1.content})
 
       assert messages == [
@@ -55,7 +55,7 @@ defmodule Db.ApiTest do
         Account.new(%{server_id: Db.UUID.uuid(), user_id: 123, login: "rafa", password: "1234"})
       )
 
-    db_account = Api.get_account(account.server_id, account.login)
+    db_account = Connect.get_account(account.server_id, account.login)
     assert db_account.login == account.login
     assert db_account.server_id == account.server_id
     assert db_account.user_id == account.user_id

@@ -10,7 +10,7 @@ defmodule ConnectWeb.Guardian do
     subject = claims["sub"]
     [server_id, user_id] = decode(subject)
 
-    Db.Api.get_user(server_id, String.to_integer(user_id))
+    Connect.get_user(server_id, String.to_integer(user_id))
     |> case do
       nil -> {:error, "Invalid token"}
       user -> {:ok, user}
