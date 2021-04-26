@@ -1,4 +1,4 @@
-# Connect
+# Server
 
 - `./setup.sh`
 - `mix phx.server`
