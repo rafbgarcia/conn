@@ -4,14 +4,15 @@ defmodule ConnectWeb.Resolvers.Auth do
   def login(_parent, args, _resolution) do
     case Api.get_account(args.server_id, args.login) do
       nil ->
-        {:error, :not_found}
+        {:error, :unauthorized}
 
       %Account{} = account ->
-        # TODO: check pass
-        #
-        #
-        {:ok, token, _claims} = ConnectWeb.Guardian.encode_and_sign(account)
-        {:ok, %{token: token}}
+        with true <- Bcrypt.verify_pass(args.password, account.password),
+             {:ok, token, _claims} <- ConnectWeb.Guardian.encode_and_sign(account) do
+          {:ok, %{token: token}}
+        else
+          _ -> {:error, :unauthorized}
+        end
     end
   end
 end
