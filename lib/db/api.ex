@@ -9,6 +9,8 @@ defmodule Db.Api do
     |> limit(50)
     |> allow_filtering
     |> Repo.all()
+    |> Enum.sort_by(& &1.id)
+    |> Enum.reverse()
   end
 
   def get_user(server_id, id) do
