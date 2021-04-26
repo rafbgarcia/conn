@@ -31,9 +31,15 @@ defmodule Db.Message do
     ])
   end
 
-  # Messages partitions are split by (channel, month)
+  # Messages partitions are split by (channel, bucket)
   # not to increase the partition size indefinitely.
   defp bucket(date) do
-    "#{date.year}#{date.month}"
+    semester =
+      case date.month do
+        n when n <= 6 -> 1
+        _ -> 2
+      end
+
+    "#{date.year}#{semester}"
   end
 end

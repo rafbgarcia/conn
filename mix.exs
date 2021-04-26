@@ -60,7 +60,7 @@ defmodule Connect.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "connect.create_schema"],
-      test_watch: ["test.watch --stale --max-failures 1 --trace"]
+      test_watch: ["test.watch --stale --max-failures 1"]
     ]
   end
 end
