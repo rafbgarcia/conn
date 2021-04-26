@@ -16,4 +16,7 @@ mix archive.install hex phx_new 1.5.8
 
 # Setup project
 make start
+echo ">>> ScyllaDB may take a while to load. Waiting 30 seconds before creating DB"
+sleep 30
 mix setup
+MIX_ENV=test mix connect.create_schema
