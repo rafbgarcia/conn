@@ -8,11 +8,17 @@ defmodule ConnectWeb.Resolvers.Auth do
 
       %Account{} = account ->
         with true <- Bcrypt.verify_pass(args.password, account.password),
-             {:ok, token, _claims} <- ConnectWeb.Guardian.encode_and_sign(account) do
+             {:ok, token, _claims} <- gen_token(account) do
           {:ok, %{token: token}}
         else
           _ -> {:error, :unauthorized}
         end
     end
+  end
+
+  defp gen_token(account) do
+    # TODO:
+    # I'm leaving 1 minute TTL here as a reminder to handle token expiration
+    ConnectWeb.Guardian.encode_and_sign(account, %{}, ttl: {1, :minute})
   end
 end
