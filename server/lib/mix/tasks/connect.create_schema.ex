@@ -41,13 +41,14 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       CREATE TABLE IF NOT EXISTS #{keyspace}.users(
         server_id uuid,
         id int,
+        handle text,
         name text,
         avatar text,
         active boolean,
         created_at timestamp,
         edited_at timestamp,
         metadata map<text, text>,
-        PRIMARY KEY(server_id, id)
+        PRIMARY KEY(server_id, id, handle)
       );
       """,
       """
@@ -101,6 +102,14 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         PRIMARY KEY(user_id, last_message_at, channel_id)
       );
       """
+      # """
+      # CREATE TABLE IF NOT EXISTS #{keyspace}.notification_preferences(
+      #   channel_id uuid,
+      #   user_id int,
+      #   level int,
+      #   PRIMARY KEY(channel_id)
+      # );
+      # """,
       # """
       # CREATE TABLE IF NOT EXISTS #{keyspace}.events(
       #   server_id uuid,
