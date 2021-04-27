@@ -1,4 +1,4 @@
-defmodule Db.MessageTest do
+defmodule Connect.Unit.MessageTest do
   use ExUnit.Case
 
   alias Db.{Message, UUID}

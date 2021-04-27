@@ -1,4 +1,4 @@
-defmodule Connect.Factories do
+defmodule Connect.Factory do
   def build(name, attrs \\ %{}) do
     apply(__MODULE__, name, [attrs |> Enum.into(%{})])
   end
@@ -58,14 +58,14 @@ defmodule Connect.Factories do
   end
 
   defp sequence(name, fun \\ & &1) do
-    Connect.Seq.get(name)
+    Connect.FactorySequence.get(name)
     |> case do
       nil ->
-        Connect.Seq.put(name, 1)
+        Connect.FactorySequence.put(name, 1)
         fun.(0)
 
       val ->
-        Connect.Seq.put(name, val + 1)
+        Connect.FactorySequence.put(name, val + 1)
         fun.(val)
     end
   end

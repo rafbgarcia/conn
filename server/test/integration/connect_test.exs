@@ -1,6 +1,5 @@
 defmodule ConnectTest do
   use ConnectWeb.ConnCase, async: true
-  import Connect.Factories
 
   describe ".messages_for_channel" do
     test "returns channel's messages" do

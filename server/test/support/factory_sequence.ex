@@ -1,4 +1,4 @@
-defmodule Connect.Seq do
+defmodule Connect.FactorySequence do
   use Agent
 
   def start_link(_opts) do

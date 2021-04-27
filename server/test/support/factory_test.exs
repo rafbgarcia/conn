@@ -1,6 +1,6 @@
-defmodule Connect.FactoriesTest do
+defmodule Connect.FactoryTest do
   use ExUnit.Case
-  import Connect.Factories
+  import Connect.Factory
   import Cassandrax.Query
 
   defp schema_equal(a, b) do

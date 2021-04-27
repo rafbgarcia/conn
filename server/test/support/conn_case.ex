@@ -23,11 +23,44 @@ defmodule ConnectWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import ConnectWeb.ConnCase
-
+      import Connect.Factory
       alias ConnectWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint ConnectWeb.Endpoint
+
+      @doc """
+      Makes an authenticated Graphql request
+      """
+      def gql(query) do
+        {token, user, account} = jwt()
+
+        conn =
+          build_conn()
+          |> put_req_header("authorization", "Bearer #{token}")
+          |> post("/api", query: query)
+
+        %{res: json_response(conn, 200), token: token, user: user, account: account}
+      end
+
+      @doc """
+      Makes an authenticated Graphql request using the given token
+      """
+      def gql_with_token(query, token) do
+        build_conn()
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> post("/api", query: query)
+        |> json_response(200)
+      end
+
+      @doc """
+      Makes an unauthenticated Graphql request
+      """
+      def non_auth_gql(query) do
+        build_conn()
+        |> post("/api", query: query)
+        |> json_response(200)
+      end
     end
   end
 

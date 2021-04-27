@@ -1,2 +1,2 @@
-Connect.Seq.start_link([])
+Connect.FactorySequence.start_link([])
 ExUnit.start()
