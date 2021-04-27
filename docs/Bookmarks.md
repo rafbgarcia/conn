@@ -70,7 +70,6 @@ Legend:
   - Tim (1)
   - Wade (3)
   - Joshua Graves (I don't have Josh in my groups, but I received a message from him and read it. Now his bookmark stays here until the app loads again)
-  -
 ```
 
 ## Past problems

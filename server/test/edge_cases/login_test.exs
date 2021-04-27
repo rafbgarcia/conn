@@ -17,7 +17,7 @@ defmodule Connect.EdgeCases.LoginTest do
     assert Enum.at(res["errors"], 0)["message"] == "unauthorized"
   end
 
-  test "access token returned by login is works to authenticate upcoming requests" do
+  test "access token returned by login works to authenticate upcoming requests" do
     login = fn ->
       user = insert(:user)
       account = insert(:account, user_id: user.id, server_id: user.server_id, password: "123")
