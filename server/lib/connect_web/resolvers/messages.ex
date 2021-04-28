@@ -10,13 +10,21 @@ defmodule ConnectWeb.Resolvers.Messages do
 
   def create(_parent, _args, _resolutions), do: {:error, :unauthorized}
 
-  def edit(_parent, args, %{context: %{current_user: _}}) do
-    message =
-      Connect.get_message(args.channel_id, args.message_id)
-      |> Message.edit(args)
-      |> Repo.update!()
+  def edit(_parent, args, %{context: %{current_user: user}}) do
+    message = Connect.get_message(args.channel_id, args.message_id)
 
-    {:ok, message}
+    case message.author_id == user.id do
+      true ->
+        message =
+          message
+          |> Message.edit(args)
+          |> Repo.update!()
+
+        {:ok, message}
+
+      false ->
+        {:error, :unauthorized}
+    end
   end
 
   def edit(_parent, _args, _resolutions), do: {:error, :unauthorized}
