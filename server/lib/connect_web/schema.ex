@@ -48,14 +48,8 @@ defmodule ConnectWeb.Schema do
         end
       )
 
-      resolve(fn message, _topics, resolution ->
-        %{context: %{current_user: _user}} = resolution
-
-        a = %{
-          message: message
-        }
-
-        {:ok, a}
+      resolve(fn message, _topics, _resolutions ->
+        {:ok, %{message: message}}
       end)
     end
   end
