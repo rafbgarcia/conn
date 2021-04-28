@@ -47,6 +47,16 @@ defmodule ConnectWeb.Schema do
           message.channel_id
         end
       )
+
+      resolve(fn message, _topics, resolution ->
+        # TODO:
+        # Return a different type that includes
+        # - bookmarks
+        # - badges
+        # - the new message
+        %{context: %{current_user: _user}} = resolution
+        {:ok, message}
+      end)
     end
   end
 end

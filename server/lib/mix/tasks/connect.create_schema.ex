@@ -48,7 +48,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         created_at timestamp,
         edited_at timestamp,
         metadata map<text, text>,
-        PRIMARY KEY(server_id, id, handle)
+        PRIMARY KEY(server_id, id)
       );
       """,
       """

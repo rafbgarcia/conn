@@ -7,6 +7,6 @@ defmodule Db.Repo do
     {:ok, result} =
       cql("SELECT table_name FROM system_schema.tables WHERE keyspace_name = '#{__keyspace__()}'")
 
-    Enum.map(result, & &1.table_name)
+    Enum.map(result, & &1["table_name"])
   end
 end
