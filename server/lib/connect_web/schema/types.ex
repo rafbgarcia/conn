@@ -16,5 +16,13 @@ defmodule ConnectWeb.Schema.Types do
     field(:author_id, :integer)
     field(:content, :string)
     field(:created_at, :string)
+
+    field(:edited, :boolean) do
+      resolve(fn message, _, _ ->
+        {:ok, is_struct(message.edited_at)}
+      end)
+    end
+
+    field(:edited_at, :string)
   end
 end

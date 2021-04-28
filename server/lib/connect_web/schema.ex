@@ -24,6 +24,14 @@ defmodule ConnectWeb.Schema do
 
       resolve(&ConnectWeb.Resolvers.Messages.create/3)
     end
+
+    field :edit_message, :message do
+      arg(:channel_id, non_null(:string))
+      arg(:message_id, non_null(:string))
+      arg(:content, non_null(:string))
+
+      resolve(&ConnectWeb.Resolvers.Messages.edit/3)
+    end
   end
 
   subscription do

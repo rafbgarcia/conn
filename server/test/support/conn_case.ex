@@ -32,8 +32,9 @@ defmodule ConnectWeb.ConnCase do
       @doc """
       Makes an authenticated Graphql request
       """
-      def gql(query) do
-        {token, user, account} = jwt()
+      def gql(query, opts \\ []) do
+        current_user = Keyword.get(opts, :current_user)
+        {token, user, account} = jwt(current_user)
 
         conn =
           build_conn()
