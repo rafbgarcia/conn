@@ -35,7 +35,7 @@ defmodule ConnectWeb.Schema do
   end
 
   subscription do
-    field :new_message, :message do
+    field :new_message, :new_message do
       arg(:channel_ids, list_of(non_null(:string)))
 
       config(fn args, _ ->
@@ -49,13 +49,13 @@ defmodule ConnectWeb.Schema do
       )
 
       resolve(fn message, _topics, resolution ->
-        # TODO:
-        # Return a different type that includes
-        # - bookmarks
-        # - badges
-        # - the new message
         %{context: %{current_user: _user}} = resolution
-        {:ok, message}
+
+        a = %{
+          message: message
+        }
+
+        {:ok, a}
       end)
     end
   end

@@ -25,4 +25,25 @@ defmodule ConnectWeb.Schema.Types do
 
     field(:edited_at, :string)
   end
+
+  object :badge do
+    field(:channel_id, :string)
+    field(:count, :integer)
+    field(:mentions_me, :boolean)
+    field(:mentions_all, :boolean)
+  end
+
+  object :new_message do
+    field(:message, :message)
+    field(:bookmark, :string)
+    field(:notification, :string)
+
+    field(:badges, :badge) do
+      resolve(fn parent, args, resolutions ->
+        async(fn ->
+          ConnectWeb.Resolvers.Badges.update(parent, args, resolutions)
+        end)
+      end)
+    end
+  end
 end
