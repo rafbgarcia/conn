@@ -42,11 +42,7 @@ defmodule ConnectWeb.Schema do
         {:ok, topic: args.channel_ids}
       end)
 
-      trigger(:create_message,
-        topic: fn message ->
-          message.channel_id
-        end
-      )
+      trigger(:create_message, topic: & &1.channel_id)
 
       resolve(fn message, _topics, _resolutions ->
         {:ok, %{message: message}}
