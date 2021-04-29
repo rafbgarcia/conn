@@ -1,4 +1,4 @@
-defmodule Connect.UserActions.NewMessageTest do
+defmodule Connect.Features.NewMessageTest do
   use ConnectWeb.SubscriptionCase
 
   def subscription(channel_id) do

@@ -1,4 +1,4 @@
-defmodule Connect.UserActions.EditMessageTest do
+defmodule Connect.Features.EditMessageTest do
   use ConnectWeb.ConnCase
 
   test "Edits a message" do

@@ -1,4 +1,4 @@
-defmodule Connect.UserActions.CreateMessageTest do
+defmodule Connect.Features.MessageThreads do
   use ConnectWeb.ConnCase
 
   test "Creates a message for the current user in a given channel" do

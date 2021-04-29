@@ -1,4 +1,4 @@
-defmodule Connect.UserActions.LoginTest do
+defmodule Connect.Features.LoginTest do
   use ConnectWeb.ConnCase
 
   test "returns access token" do
