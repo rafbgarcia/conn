@@ -18,12 +18,15 @@ defmodule ConnectWeb.UserSocket do
   # performing token verification on connect.
   @impl true
   def connect(params, socket, _connect_info) do
-    socket =
-      Absinthe.Phoenix.Socket.put_options(socket,
-        context: ConnectWeb.GraphqlContext.build_context(params["authorization"])
-      )
+    case ConnectWeb.GraphqlContext.build_context(params["authorization"]) do
+      %{current_user: _} = context ->
+        socket = Absinthe.Phoenix.Socket.put_options(socket, context: context)
 
-    {:ok, socket}
+        {:ok, socket}
+
+      _ ->
+        :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

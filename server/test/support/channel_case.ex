@@ -22,6 +22,7 @@ defmodule ConnectWeb.ChannelCase do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
       import ConnectWeb.ChannelCase
+      import Connect.Factory
 
       # The default endpoint for testing
       @endpoint ConnectWeb.Endpoint

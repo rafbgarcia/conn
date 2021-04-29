@@ -26,6 +26,13 @@ defmodule Connect.Factory do
     |> to_struct(Db.User)
   end
 
+  def channel(attrs \\ %{}) do
+    attrs
+    |> Map.put(:server_id, attrs[:server_id] || Db.UUID.uuid())
+    |> Map.put(:name, attrs[:name] || Db.UUID.timeuuid())
+    |> to_struct(Db.Channel)
+  end
+
   def message(attrs \\ %{}) do
     attrs
     |> Map.put(:channel_id, attrs[:channel_id] || UUID.uuid1())
@@ -43,7 +50,7 @@ defmodule Connect.Factory do
   end
 
   # JSON Web Token
-  def jwt(user) do
+  def jwt(user \\ nil) do
     user = user || insert(:user)
     account = insert(:account, user_id: user.id, server_id: user.server_id)
     {:ok, jwt, _claims} = ConnectWeb.Guardian.encode_and_sign(account)

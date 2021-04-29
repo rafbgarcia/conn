@@ -16,10 +16,8 @@ defmodule Db.Channel do
   def new(attrs) do
     data =
       attrs
-      |> Map.merge(%{
-        id: UUID.timeuuid(),
-        deleted: false
-      })
+      |> Map.put(:id, UUID.timeuuid())
+      |> Map.put(:deleted, false)
 
     cast(%Channel{}, data, [
       :server_id,
