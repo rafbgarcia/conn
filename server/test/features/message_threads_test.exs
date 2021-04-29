@@ -1,7 +1,7 @@
 defmodule Connect.Features.MessageThreadsTest do
   use ConnectWeb.ConnCase
 
-  test "Creates a message that references" do
+  test "creates a message that points to another message" do
     parent_message = insert(:message)
 
     %{res: res, user: current_user} =
