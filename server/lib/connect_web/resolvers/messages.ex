@@ -1,5 +1,5 @@
 defmodule ConnectWeb.Resolvers.Messages do
-  alias Db.{Repo, Message}
+  alias Db.{Repo, Message, ThreadMessage}
 
   def list(_parent, args, %{context: %{current_user: _current_user}}) do
     message = Connect.messages_for_channel(args.channel_id)
@@ -10,12 +10,23 @@ defmodule ConnectWeb.Resolvers.Messages do
   def list(_parent, _args, _resolutions), do: {:error, :unauthorized}
 
   def thread_messages(parent_message, _args, %{context: %{current_user: _current_user}}) do
-    messages = Connect.thread_messages(parent_message.channel_id, parent_message.id)
+    messages = Connect.thread_messages(parent_message.id)
 
     {:ok, messages}
   end
 
   def thread_messages(_parent, _args, _resolutions), do: {:error, :unauthorized}
+
+  def create(
+        _parent,
+        %{parent_message_id: _} = args,
+        %{context: %{current_user: current_user}}
+      ) do
+    attrs = Map.put(args, :author_id, current_user.id)
+    message = Repo.insert!(ThreadMessage.new(attrs))
+
+    {:ok, message}
+  end
 
   def create(_parent, args, %{context: %{current_user: current_user}}) do
     attrs = Map.put(args, :author_id, current_user.id)

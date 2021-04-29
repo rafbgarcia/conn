@@ -1,7 +1,7 @@
 defmodule Connect do
   import Cassandrax.Query
 
-  alias Db.{Repo, Account, Message, User}
+  alias Db.{Repo, Account, Message, ThreadMessage, User}
 
   def get_message(channel_id, message_id) do
     Message
@@ -15,20 +15,18 @@ defmodule Connect do
   def messages_for_channel(channel_id) do
     Message
     |> where(channel_id: channel_id)
-    |> where(has_parent: false)
     |> limit(50)
     |> allow_filtering
     |> Repo.all()
+    # Need to sort in case it fetches data from different buckets
     |> Enum.sort_by(& &1.id)
     |> Enum.reverse()
   end
 
-  def thread_messages(channel_id, message_id) do
-    Message
-    |> where(channel_id: channel_id)
-    |> where(bucket: Message.bucket(Db.UUID.to_datetime(message_id)))
-    |> where(has_parent: true)
+  def thread_messages(message_id) do
+    ThreadMessage
     |> where(parent_message_id: message_id)
+    |> limit(25)
     |> Repo.all()
   end
 

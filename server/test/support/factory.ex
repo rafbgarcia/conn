@@ -35,10 +35,17 @@ defmodule Connect.Factory do
 
   def message(attrs \\ %{}) do
     attrs
-    |> Map.put(:channel_id, attrs[:channel_id] || UUID.uuid1())
-    |> Map.put(:parent_message_id, attrs[:parent_message_id] || nil)
+    |> Map.put(:channel_id, attrs[:channel_id] || Db.UUID.uuid())
     |> Map.put(:author_id, attrs[:author_id] || sequence(:user_id))
     |> to_struct(Db.Message)
+  end
+
+  def thread_message(attrs \\ %{}) do
+    attrs
+    |> Map.put(:channel_id, attrs[:channel_id] || Db.UUID.uuid())
+    |> Map.put(:parent_message_id, attrs[:parent_message_id] || Db.UUID.timeuuid())
+    |> Map.put(:author_id, attrs[:author_id] || sequence(:user_id))
+    |> to_struct(Db.ThreadMessage)
   end
 
   def account(attrs \\ %{}) do

@@ -3,7 +3,7 @@ defmodule ConnectTest do
 
   describe ".messages_for_channel" do
     test "returns channel's messages" do
-      channel_id = UUID.uuid1()
+      channel_id = Db.UUID.uuid()
       insert(:message, channel_id: channel_id)
       insert(:message, channel_id: channel_id)
 
@@ -21,7 +21,7 @@ defmodule ConnectTest do
         end
       end
 
-      channel_id = UUID.uuid1()
+      channel_id = Db.UUID.uuid()
 
       Enum.each(0..8, fn i ->
         build(:message, channel_id: channel_id, content: "msg #{i}", author_id: 2)

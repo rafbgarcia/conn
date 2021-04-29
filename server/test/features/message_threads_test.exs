@@ -36,9 +36,9 @@ defmodule Connect.Features.MessageThreadsTest do
     message = insert(:message, content: "Parent")
     attrs = %{channel_id: message.channel_id, parent_message_id: message.id}
 
-    insert(:message, Map.put(attrs, :content, "msg 1"))
-    insert(:message, Map.put(attrs, :content, "msg 2"))
-    insert(:message, Map.put(attrs, :content, "msg 3"))
+    insert(:thread_message, Map.put(attrs, :content, "msg 1"))
+    insert(:thread_message, Map.put(attrs, :content, "msg 2"))
+    insert(:thread_message, Map.put(attrs, :content, "msg 3"))
 
     %{res: res} =
       gql("""
