@@ -4,11 +4,12 @@ defmodule Db.Message do
 
   alias Db.{UUID, Message}
 
-  @primary_key [[:channel_id, :bucket], :id]
+  @primary_key [[:channel_id, :bucket], :parent_message_id, :id]
 
   table "messages" do
     field(:channel_id, :string)
     field(:bucket, :string)
+    field(:parent_message_id, :string)
     field(:id, :string)
     field(:content, :string)
     field(:author_id, :integer)
@@ -17,15 +18,19 @@ defmodule Db.Message do
   end
 
   def new(attrs) do
+    id = UUID.timeuuid()
+
     attrs =
       attrs
-      |> Map.put(:id, UUID.timeuuid())
+      |> Map.put(:id, id)
       |> Map.put(:bucket, bucket(Date.utc_today()))
       |> Map.put(:created_at, DateTime.utc_now())
+      |> Map.put(:parent_message_id, attrs[:parent_message_id] || id)
 
     cast(%Message{}, attrs, [
       :channel_id,
       :bucket,
+      :parent_message_id,
       :id,
       :content,
       :author_id,
@@ -38,6 +43,7 @@ defmodule Db.Message do
     message
     |> change(content: attrs.content)
     |> change(edited_at: DateTime.truncate(DateTime.utc_now(), :second))
+    |> change(parent_message_id: message.parent_message_id)
   end
 
   # Messages partitions are split by (channel, bucket)

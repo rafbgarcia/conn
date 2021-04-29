@@ -7,6 +7,7 @@ defmodule Connect do
     Message
     |> where(channel_id: channel_id)
     |> where(bucket: Message.bucket(Db.UUID.to_datetime(message_id)))
+    |> where(parent_message_id: message_id)
     |> where(id: message_id)
     |> Repo.one()
   end

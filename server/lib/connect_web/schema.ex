@@ -20,6 +20,7 @@ defmodule ConnectWeb.Schema do
 
     field :create_message, :message do
       arg(:channel_id, non_null(:string))
+      arg(:parent_message_id, :string)
       arg(:content, non_null(:string))
 
       resolve(&ConnectWeb.Resolvers.Messages.create/3)

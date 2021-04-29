@@ -13,6 +13,7 @@ defmodule ConnectWeb.Schema.Types do
   object :message do
     field(:id, :id)
     field(:channel_id, :string)
+    field(:parent_message_id, :string)
     field(:author_id, :integer)
     field(:content, :string)
     field(:created_at, :string)

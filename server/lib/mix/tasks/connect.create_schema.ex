@@ -7,7 +7,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
     Mix.Task.run("app.start")
 
     schema()
-    |> Enum.each(&Db.Repo.cql/1)
+    |> Enum.each(&({:ok, _} = Db.Repo.cql(&1)))
   end
 
   defp schema do
@@ -83,6 +83,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         channel_id uuid,
         bucket text,
         id timeuuid,
+        parent_message_id timeuuid,
         author_id int,
         content text,
         mentions_all boolean,
@@ -91,8 +92,8 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         attachments list<frozen<map<text, text>>>,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY((channel_id, bucket), id)
-      ) WITH CLUSTERING ORDER BY (id DESC);
+        PRIMARY KEY((channel_id, bucket), parent_message_id, id)
+      ) WITH CLUSTERING ORDER BY (parent_message_id DESC, id DESC);
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.bookmarks(
