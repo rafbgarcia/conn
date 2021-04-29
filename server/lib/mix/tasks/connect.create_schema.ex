@@ -83,6 +83,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         channel_id uuid,
         bucket text,
         id timeuuid,
+        has_parent boolean,
         parent_message_id timeuuid,
         author_id int,
         content text,
@@ -92,8 +93,8 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         attachments list<frozen<map<text, text>>>,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY((channel_id, bucket), parent_message_id, id)
-      ) WITH CLUSTERING ORDER BY (parent_message_id DESC, id DESC);
+        PRIMARY KEY((channel_id, bucket), has_parent, parent_message_id, id)
+      ) WITH CLUSTERING ORDER BY (has_parent DESC, parent_message_id DESC, id DESC);
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.bookmarks(

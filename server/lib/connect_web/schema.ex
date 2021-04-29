@@ -7,6 +7,12 @@ defmodule ConnectWeb.Schema do
     field :channels, list_of(:channel) do
       resolve(&ConnectWeb.Resolvers.Channels.list/3)
     end
+
+    field :messages, list_of(:message) do
+      arg(:channel_id, non_null(:string))
+
+      resolve(&ConnectWeb.Resolvers.Messages.list/3)
+    end
   end
 
   mutation do

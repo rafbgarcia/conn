@@ -25,6 +25,10 @@ defmodule ConnectWeb.Schema.Types do
     end
 
     field(:edited_at, :string)
+
+    field(:messages, list_of(:message)) do
+      resolve(&ConnectWeb.Resolvers.Messages.thread_messages/3)
+    end
   end
 
   object :badge do

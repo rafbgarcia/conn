@@ -4,11 +4,12 @@ defmodule Db.Message do
 
   alias Db.{UUID, Message}
 
-  @primary_key [[:channel_id, :bucket], :parent_message_id, :id]
+  @primary_key [[:channel_id, :bucket], :has_parent, :parent_message_id, :id]
 
   table "messages" do
     field(:channel_id, :string)
     field(:bucket, :string)
+    field(:has_parent, :boolean)
     field(:parent_message_id, :string)
     field(:id, :string)
     field(:content, :string)
@@ -25,11 +26,13 @@ defmodule Db.Message do
       |> Map.put(:id, id)
       |> Map.put(:bucket, bucket(Date.utc_today()))
       |> Map.put(:created_at, DateTime.utc_now())
+      |> Map.put(:has_parent, !!attrs[:parent_message_id])
       |> Map.put(:parent_message_id, attrs[:parent_message_id] || id)
 
     cast(%Message{}, attrs, [
       :channel_id,
       :bucket,
+      :has_parent,
       :parent_message_id,
       :id,
       :content,
@@ -43,6 +46,7 @@ defmodule Db.Message do
     message
     |> change(content: attrs.content)
     |> change(edited_at: DateTime.truncate(DateTime.utc_now(), :second))
+    |> change(has_parent: message.has_parent)
     |> change(parent_message_id: message.parent_message_id)
   end
 
