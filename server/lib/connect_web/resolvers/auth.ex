@@ -18,7 +18,7 @@ defmodule ConnectWeb.Resolvers.Auth do
 
   defp gen_token(account) do
     # TODO:
-    # I'm leaving 1 minute TTL here as a reminder to handle token expiration
+    # TTL, refresh token
     ConnectWeb.Guardian.encode_and_sign(account, %{}, ttl: {1, :day})
   end
 end
