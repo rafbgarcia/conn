@@ -14,9 +14,6 @@ defmodule Mix.Tasks.Connect.CreateSchema do
     keyspace = Db.Repo.__keyspace__()
 
     [
-      # `user_metadata` will be used to fetch additional fields
-      # from the GraphQL endpoint in Nitro, and also to select
-      # users by these fields (as with Audiences)
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.servers(
         id bigint,
@@ -53,28 +50,26 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.channels(
-        user_id bigint,
+        server_id bigint,
+        owner_id bigint,
         id bigint,
         name text,
-        server_id bigint,
-        direct boolean,
-        public boolean,
-        broadcast boolean,
-        admin_ids set<int>,
-        broadcaster_ids set<int>,
+        topic text,
+        type int,
+        admin_ids set<bigint>,
+        broadcaster_ids set<bigint>,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY(user_id, id)
+        PRIMARY KEY(server_id, id)
       ) WITH CLUSTERING ORDER BY (id DESC);
       """,
       """
-      CREATE TABLE IF NOT EXISTS #{keyspace}.channel_users(
-        channel_id bigint,
+      CREATE TABLE IF NOT EXISTS #{keyspace}.channel_members(
         user_id bigint,
+        channel_id bigint,
         created_at timestamp,
-        edited_at timestamp,
-        PRIMARY KEY(channel_id, user_id)
-      );
+        PRIMARY KEY(user_id, channel_id)
+      ) WITH CLUSTERING ORDER BY (channel_id DESC);
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.messages(
@@ -84,7 +79,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         author_id bigint,
         content text,
         mentions_all boolean,
-        mentions set<int>,
+        mentions set<bigint>,
         mention_roles set<int>,
         attachments list<frozen<map<text, text>>>,
         created_at timestamp,

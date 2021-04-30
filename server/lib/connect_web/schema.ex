@@ -1,7 +1,7 @@
 defmodule ConnectWeb.Schema do
   use Absinthe.Schema
   import_types(ConnectWeb.Schema.Types)
-  import_types(ConnectWeb.Schema.ScalarType)
+  import_types(ConnectWeb.Schema.ScalarTypes)
 
   query do
     @desc "Get user's channels"
@@ -10,7 +10,7 @@ defmodule ConnectWeb.Schema do
     end
 
     field :messages, list_of(:message) do
-      arg(:channel_id, non_null(:snowflake))
+      arg(:channel_id, non_null(:bigint))
 
       resolve(&ConnectWeb.Resolvers.Messages.list/3)
     end
@@ -18,24 +18,32 @@ defmodule ConnectWeb.Schema do
 
   mutation do
     field :login, :account do
-      arg(:server_id, non_null(:snowflake))
+      arg(:server_id, non_null(:bigint))
       arg(:login, non_null(:string))
       arg(:password, non_null(:string))
 
       resolve(&ConnectWeb.Resolvers.Auth.login/3)
     end
 
+    field :create_channel, :channel do
+      arg(:server_id, non_null(:bigint))
+      arg(:name, non_null(:string))
+      arg(:type, non_null(:integer))
+
+      resolve(&ConnectWeb.Resolvers.Channels.create/3)
+    end
+
     field :create_message, :message do
-      arg(:channel_id, non_null(:snowflake))
-      arg(:parent_message_id, :snowflake)
+      arg(:channel_id, non_null(:bigint))
+      arg(:parent_message_id, :bigint)
       arg(:content, non_null(:string))
 
       resolve(&ConnectWeb.Resolvers.Messages.create/3)
     end
 
     field :edit_message, :message do
-      arg(:channel_id, non_null(:snowflake))
-      arg(:message_id, non_null(:snowflake))
+      arg(:channel_id, non_null(:bigint))
+      arg(:message_id, non_null(:bigint))
       arg(:content, non_null(:string))
 
       resolve(&ConnectWeb.Resolvers.Messages.edit/3)

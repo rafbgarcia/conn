@@ -28,8 +28,10 @@ defmodule Connect.Factory do
 
   def channel(attrs \\ %{}) do
     attrs
-    |> Map.put(:user_id, attrs[:user_id] || sequence(:user_id))
+    |> Map.put(:server_id, attrs[:server_id] || sequence(:user_id))
+    |> Map.put(:owner_id, attrs[:owner_id] || sequence(:user_id))
     |> Map.put(:name, attrs[:name] || sequence(:channel_name, &"Channel #{&1}"))
+    |> Map.put(:type, attrs[:type] || Db.Channel.types().private)
     |> to_struct(Db.Channel)
   end
 
