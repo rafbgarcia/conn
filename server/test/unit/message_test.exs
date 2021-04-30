@@ -3,17 +3,17 @@ defmodule Connect.Unit.MessageTest do
 
   alias Db.{Message}
 
-  describe "new" do
-    test "returns the message" do
-      attrs = %{channel_id: Db.Snowflake.new(), content: "hey", author_id: 2}
-      message = Message.new(attrs).changes
+  @msg Message.new(%{}).changes
 
-      assert is_integer(message.id)
-      assert is_integer(message.bucket)
-      assert message.channel_id == attrs.channel_id
-      assert message.author_id == attrs.author_id
-      assert message.content == attrs.content
-      assert is_struct(message.created_at)
-    end
+  test "sets id" do
+    assert is_integer(@msg.id)
+  end
+
+  test "sets bucket" do
+    assert is_integer(@msg.bucket)
+  end
+
+  test "sets created_at" do
+    assert is_struct(@msg.created_at)
   end
 end

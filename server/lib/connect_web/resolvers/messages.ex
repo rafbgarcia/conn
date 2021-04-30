@@ -2,7 +2,7 @@ defmodule ConnectWeb.Resolvers.Messages do
   alias Db.{Repo, Message, ThreadMessage}
 
   def list(_parent, args, %{context: %{current_user: _current_user}}) do
-    message = Connect.messages_for_channel(args.channel_id)
+    message = Connect.channel_messages(args.channel_id)
 
     {:ok, message}
   end

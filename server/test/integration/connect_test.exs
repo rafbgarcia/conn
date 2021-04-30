@@ -2,17 +2,17 @@ defmodule ConnectTest do
   use ConnectWeb.ConnCase, async: true
   use Connect.IntegrationCase, truncate_tables: [:channels, :messages]
 
-  describe ".messages_for_channel" do
+  describe ".channel_messages" do
     test "returns channel's messages" do
       channel_id = build(:channel).id
       insert(:message, channel_id: channel_id)
       insert(:message, channel_id: channel_id)
 
-      messages = Connect.messages_for_channel(channel_id)
+      messages = Connect.channel_messages(channel_id)
       assert Kernel.length(messages) == 2
     end
 
-    test "ensure messages order when fetching from different buckets" do
+    test "sorts by latest messages, even when fetching from different buckets" do
       channel = build(:channel) |> Map.put(:id, Db.Snowflake.gen_buckets_diff_id(1)) |> insert
 
       Enum.each(0..6, fn i ->
@@ -24,7 +24,7 @@ defmodule ConnectTest do
       end)
 
       messages =
-        Connect.messages_for_channel(channel.id, 5)
+        Connect.channel_messages(channel.id, 5)
         |> Enum.map(&{&1.bucket, &1.content})
 
       assert messages == [
@@ -37,7 +37,7 @@ defmodule ConnectTest do
     end
   end
 
-  test "fetches account from the db" do
+  test ".get_account" do
     account = insert(:account, password: "1234")
 
     db_account = Connect.get_account(account.server_id, account.login)

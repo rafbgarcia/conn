@@ -11,7 +11,7 @@ defmodule Connect do
     |> Repo.one()
   end
 
-  def messages_for_channel(channel_id, limit \\ 50) do
+  def channel_messages(channel_id, limit \\ 50) do
     Db.Snowflake.bucket_range(channel_id)
     |> Enum.reduce_while([], fn bucket, messages ->
       if length(messages) < limit do

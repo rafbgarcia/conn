@@ -10,7 +10,12 @@ defmodule Db.Snowflake do
   end
 
   def bucket_range(start_id, end_id \\ nil) do
-    bucket(end_id || new())..bucket(start_id)
+    a = bucket(end_id || new())
+    b = bucket(start_id)
+    cond do
+      a > b -> a..b
+      true -> b..a
+    end
   end
 
   def connect_epoch do

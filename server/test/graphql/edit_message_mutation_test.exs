@@ -1,4 +1,4 @@
-defmodule Connect.Features.EditMessageTest do
+defmodule Connect.Graphql.EditMessageMutationTest do
   use ConnectWeb.ConnCase
 
   test "Edits a message" do

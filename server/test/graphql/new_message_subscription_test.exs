@@ -1,4 +1,4 @@
-defmodule Connect.Features.NewMessageTest do
+defmodule Connect.Graphql.NewMessageSubscriptionTest do
   use ConnectWeb.SubscriptionCase
 
   def subscription(channel_id) do
