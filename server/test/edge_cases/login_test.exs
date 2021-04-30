@@ -40,7 +40,7 @@ defmodule Connect.EdgeCases.LoginTest do
     create_message = fn token ->
       query = """
       mutation {
-        message: createMessage(channelId: "#{Db.UUID.uuid()}", content: "Hello world") {
+        message: createMessage(channelId: "#{Db.Snowflake.new()}", content: "Hello world") {
           id
           content
           authorId

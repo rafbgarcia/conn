@@ -7,7 +7,7 @@ defmodule Db.User do
   @primary_key [:server_id, :id]
 
   table "users" do
-    field(:server_id, :string)
+    field(:server_id, :integer)
     field(:id, :integer)
     field(:name, :string)
   end

@@ -19,7 +19,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       # users by these fields (as with Audiences)
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.servers(
-        id uuid,
+        id bigint,
         name text,
         config map<text, text>,
         user_metadata map<text, text>,
@@ -28,9 +28,9 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.accounts(
-        server_id uuid,
+        server_id bigint,
         login text,
-        user_id int,
+        user_id bigint,
         password text,
         created_at timestamp,
         edited_at timestamp,
@@ -39,8 +39,8 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.users(
-        server_id uuid,
-        id int,
+        server_id bigint,
+        id bigint,
         handle text,
         name text,
         avatar text,
@@ -53,9 +53,9 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.channels(
-        server_id uuid,
+        server_id bigint,
         deleted boolean,
-        id timeuuid,
+        id bigint,
         name text,
         direct boolean,
         public boolean,
@@ -69,9 +69,9 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.channel_users(
-        server_id uuid,
-        channel_id timeuuid,
-        user_id uuid,
+        server_id bigint,
+        channel_id bigint,
+        user_id bigint,
         joined_at timestamp,
         created_at timestamp,
         edited_at timestamp,
@@ -80,10 +80,10 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.messages(
-        channel_id uuid,
-        bucket text,
-        id timeuuid,
-        author_id int,
+        channel_id bigint,
+        bucket int,
+        id bigint,
+        author_id bigint,
         content text,
         mentions_all boolean,
         mentions set<int>,
@@ -96,10 +96,10 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.thread_messages(
-        parent_message_id timeuuid,
-        id timeuuid,
-        channel_id uuid,
-        author_id int,
+        parent_message_id bigint,
+        id bigint,
+        channel_id bigint,
+        author_id bigint,
         content text,
         mentions_all boolean,
         mentions set<int>,
@@ -112,24 +112,24 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.bookmarks(
-        user_id int,
-        channel_id uuid,
+        user_id bigint,
+        channel_id bigint,
         last_message_at timestamp,
         PRIMARY KEY(user_id, last_message_at, channel_id)
       );
       """
       # """
       # CREATE TABLE IF NOT EXISTS #{keyspace}.notification_preferences(
-      #   channel_id uuid,
-      #   user_id int,
+      #   channel_id bigint,
+      #   user_id bigint,
       #   level int,
       #   PRIMARY KEY(channel_id)
       # );
       # """,
       # """
       # CREATE TABLE IF NOT EXISTS #{keyspace}.events(
-      #   server_id uuid,
-      #   id uuid,
+      #   server_id bigint,
+      #   id bigint,
       #   position int,
       #   image text,
       #   PRIMARY KEY(server_id, position)
@@ -137,8 +137,8 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       # """,
       # """
       # CREATE TABLE IF NOT EXISTS #{keyspace}.event_sections(
-      #   event_id int,
-      #   id uuid,
+      #   event_id bigint,
+      #   id bigint,
       #   name text,
       #   position int,
       #   PRIMARY KEY(event_id, position)
@@ -146,13 +146,13 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       # """,
       # """
       # CREATE TABLE IF NOT EXISTS #{keyspace}.event_items(
-      #   event_id int,
-      #   section_id int,
+      #   event_id bigint,
+      #   section_id bigint,
       #   name text,
       #   position int,
       #   type text,
       #   url text,
-      #   channel_id uuid,
+      #   channel_id bigint,
       #   PRIMARY KEY(event_id, position)
       # );
       # """

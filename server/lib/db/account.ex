@@ -7,7 +7,7 @@ defmodule Db.Account do
   @primary_key [:server_id, :login]
 
   table "accounts" do
-    field(:server_id, :string)
+    field(:server_id, :integer)
     field(:login, :string)
     field(:password, :string)
     field(:user_id, :integer)

@@ -24,7 +24,7 @@ defmodule Connect.Features.MessageThreadsTest do
     assert res["errors"] == nil
 
     message = res["data"]["message"]
-    assert message["parentMessageId"] == parent_message.id
+    assert message["parentMessageId"] == "#{parent_message.id}"
     assert message["id"] != parent_message.id
     assert is_binary(message["id"])
     assert is_binary(message["channelId"])

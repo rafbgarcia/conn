@@ -2,21 +2,19 @@ defmodule Db.Server do
   use Cassandrax.Schema
   import Ecto.Changeset
 
-  alias Db.{UUID, Server}
+  alias Db.{Server}
 
   @primary_key [:id]
 
   table "servers" do
-    field(:id, :string)
+    field(:id, :integer)
     field(:name, :string)
   end
 
   def new(attrs) do
     data =
       attrs
-      |> Map.merge(%{
-        id: UUID.uuid()
-      })
+      |> Map.put(:id, Db.Snowflake.new())
 
     cast(%Server{}, data, [
       :id,

@@ -21,36 +21,36 @@ defmodule Connect.Factory do
   def user(attrs \\ %{}) do
     attrs
     |> Map.put(:id, attrs[:id] || sequence(:user_id))
-    |> Map.put(:server_id, attrs[:server_id] || UUID.uuid1())
+    |> Map.put(:server_id, attrs[:server_id] || Db.Snowflake.new())
     |> Map.put(:name, attrs[:name] || sequence(:name, &"User #{&1}"))
     |> to_struct(Db.User)
   end
 
   def channel(attrs \\ %{}) do
     attrs
-    |> Map.put(:server_id, attrs[:server_id] || Db.UUID.uuid())
-    |> Map.put(:name, attrs[:name] || Db.UUID.timeuuid())
+    |> Map.put(:server_id, attrs[:server_id] || Db.Snowflake.new())
+    |> Map.put(:name, attrs[:name] || Db.Snowflake.new())
     |> to_struct(Db.Channel)
   end
 
   def message(attrs \\ %{}) do
     attrs
-    |> Map.put(:channel_id, attrs[:channel_id] || Db.UUID.uuid())
+    |> Map.put(:channel_id, attrs[:channel_id] || Db.Snowflake.new())
     |> Map.put(:author_id, attrs[:author_id] || sequence(:user_id))
     |> to_struct(Db.Message)
   end
 
   def thread_message(attrs \\ %{}) do
     attrs
-    |> Map.put(:channel_id, attrs[:channel_id] || Db.UUID.uuid())
-    |> Map.put(:parent_message_id, attrs[:parent_message_id] || Db.UUID.timeuuid())
+    |> Map.put(:channel_id, attrs[:channel_id] || Db.Snowflake.new())
+    |> Map.put(:parent_message_id, attrs[:parent_message_id] || Db.Snowflake.new())
     |> Map.put(:author_id, attrs[:author_id] || sequence(:user_id))
     |> to_struct(Db.ThreadMessage)
   end
 
   def account(attrs \\ %{}) do
     attrs
-    |> Map.put(:server_id, attrs[:server_id] || Db.UUID.uuid())
+    |> Map.put(:server_id, attrs[:server_id] || Db.Snowflake.new())
     |> Map.put(:user_id, attrs[:user_id] || sequence(:user_id))
     |> Map.put(:login, attrs[:login] || sequence(:login, &"login #{&1}"))
     |> Map.put(:password, attrs[:password] || sequence(:password, &"pass-#{&1}"))

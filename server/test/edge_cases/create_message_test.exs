@@ -4,7 +4,7 @@ defmodule Connect.EdgeCases.CreateMessageTest do
   test "fails when for unauthorized users" do
     query = """
     mutation {
-      message: createMessage(channelId: "#{UUID.uuid1()}", content: "Hello world") {
+      message: createMessage(channelId: "#{Db.Snowflake.new()}", content: "Hello world") {
         id
       }
     }

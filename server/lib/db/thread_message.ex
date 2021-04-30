@@ -2,14 +2,14 @@ defmodule Db.ThreadMessage do
   use Cassandrax.Schema
   import Ecto.Changeset
 
-  alias Db.{UUID, ThreadMessage}
+  alias Db.{ThreadMessage}
 
   @primary_key [:parent_message_id, :id]
 
   table "thread_messages" do
-    field(:channel_id, :string)
-    field(:parent_message_id, :string)
-    field(:id, :string)
+    field(:channel_id, :integer)
+    field(:parent_message_id, :integer)
+    field(:id, :integer)
     field(:content, :string)
     field(:author_id, :integer)
     field(:created_at, :utc_datetime)
@@ -17,7 +17,7 @@ defmodule Db.ThreadMessage do
   end
 
   def new(attrs) do
-    id = UUID.timeuuid()
+    id = Db.Snowflake.new()
 
     attrs =
       attrs

@@ -6,14 +6,14 @@ defmodule ConnectWeb.Schema.Types do
   end
 
   object :channel do
-    field(:id, :id)
+    field(:id, :snowflake)
     field(:name, :string)
   end
 
   object :message do
-    field(:id, :id)
-    field(:channel_id, :string)
-    field(:parent_message_id, :string)
+    field(:id, :snowflake)
+    field(:channel_id, :snowflake)
+    field(:parent_message_id, :snowflake)
     field(:author_id, :integer)
     field(:content, :string)
     field(:created_at, :string)
@@ -32,7 +32,7 @@ defmodule ConnectWeb.Schema.Types do
   end
 
   object :badge do
-    field(:channel_id, :string)
+    field(:channel_id, :snowflake)
     field(:count, :integer)
     field(:mentions_me, :boolean)
     field(:mentions_all, :boolean)

@@ -1,11 +1,11 @@
 defmodule Connect.IntegrationCaseTest do
   use Connect.IntegrationCase, truncate_tables: [:messages]
 
-  alias Db.{Repo, Message, UUID}
+  alias Db.{Repo, Message}
 
   describe "truncate_table" do
     test "records created in one test case" do
-      Repo.insert!(Message.new(%{channel_id: UUID.uuid(), content: "hey", author_id: 2}))
+      Repo.insert!(Message.new(%{channel_id: Db.Snowflake.new(), content: "hey", author_id: 2}))
       assert Kernel.length(Repo.all(Message)) == 1
     end
 

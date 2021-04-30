@@ -4,7 +4,7 @@ defmodule Connect.Features.MessageThreads do
   test "Creates a message for the current user in a given channel" do
     query = """
     mutation {
-      message: createMessage(channelId: "#{UUID.uuid1()}", content: "Hello world") {
+      message: createMessage(channelId: "#{Db.Snowflake.new()}", content: "Hello world") {
         id
         channelId
         authorId

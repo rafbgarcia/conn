@@ -29,6 +29,10 @@ config :cassandrax, Connect.Cluster,
   write_options: [consistency: :local_quorum],
   read_options: [consistency: :one]
 
+config :snowflake,
+  machine_id: 23,
+  epoch: DateTime.to_unix(~U[2021-01-01 00:00:00Z], :millisecond)
+
 # Guardian
 config :connect, ConnectWeb.Guardian,
   issuer: "connect",

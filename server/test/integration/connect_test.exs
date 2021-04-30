@@ -1,9 +1,10 @@
 defmodule ConnectTest do
   use ConnectWeb.ConnCase, async: true
+  use Connect.IntegrationCase, truncate_tables: [:channels, :messages]
 
   describe ".messages_for_channel" do
     test "returns channel's messages" do
-      channel_id = Db.UUID.uuid()
+      channel_id = build(:channel).id
       insert(:message, channel_id: channel_id)
       insert(:message, channel_id: channel_id)
 
@@ -11,38 +12,27 @@ defmodule ConnectTest do
       assert Kernel.length(messages) == 2
     end
 
-    test "messages order when fetching from different buckets" do
-      bucket = fn i ->
-        case i do
-          n when n <= 2 -> "20201"
-          n when n <= 4 -> "20202"
-          n when n <= 6 -> "20211"
-          _ -> "20212"
-        end
-      end
+    test "ensure messages order when fetching from different buckets" do
+      channel = build(:channel) |> Map.put(:id, Db.Snowflake.gen_buckets_diff_id(1)) |> insert
 
-      channel_id = Db.UUID.uuid()
+      Enum.each(0..6, fn i ->
+        id = Db.Snowflake.gen_buckets_diff_id(floor(i / 3) + 1)
 
-      Enum.each(0..8, fn i ->
-        build(:message, channel_id: channel_id, content: "msg #{i}", author_id: 2)
-        |> Map.put(:bucket, bucket.(i))
+        build(:message, channel_id: channel.id, content: "msg #{i}", author_id: 2)
+        |> Map.put(:bucket, Db.Snowflake.bucket(id))
         |> insert
       end)
 
       messages =
-        Connect.messages_for_channel(channel_id)
+        Connect.messages_for_channel(channel.id, 5)
         |> Enum.map(&{&1.bucket, &1.content})
 
       assert messages == [
-               {"20212", "msg 8"},
-               {"20212", "msg 7"},
-               {"20211", "msg 6"},
-               {"20211", "msg 5"},
-               {"20202", "msg 4"},
-               {"20202", "msg 3"},
-               {"20201", "msg 2"},
-               {"20201", "msg 1"},
-               {"20201", "msg 0"}
+               {3, "msg 6"},
+               {2, "msg 5"},
+               {2, "msg 4"},
+               {2, "msg 3"},
+               {1, "msg 2"}
              ]
     end
   end

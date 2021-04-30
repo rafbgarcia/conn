@@ -10,7 +10,7 @@ defmodule ConnectWeb.Guardian do
     subject = claims["sub"]
     [server_id, user_id] = decode(subject)
 
-    Connect.get_user(server_id, String.to_integer(user_id))
+    Connect.get_user(server_id, user_id)
     |> case do
       nil -> {:error, "Invalid token"}
       user -> {:ok, user}
@@ -22,5 +22,5 @@ defmodule ConnectWeb.Guardian do
   defp encode(%{server_id: server_id, user_id: user_id}),
     do: Enum.join([server_id, user_id], @key)
 
-  defp decode(subject), do: String.split(subject, @key)
+  defp decode(subject), do: String.split(subject, @key) |> Enum.map(&String.to_integer/1)
 end

@@ -43,7 +43,7 @@ defmodule Connect.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:cassandrax, "~> 0.0.3"},
-      {:elixir_uuid, "~> 1.2"},
+      {:snowflake, "~> 1.0.0"},
       {:absinthe_phoenix, "~> 2.0"},
       {:guardian, "~> 2.1"},
       {:bcrypt_elixir, "~> 2.0"},
