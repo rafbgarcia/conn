@@ -28,8 +28,8 @@ defmodule Connect.Factory do
 
   def channel(attrs \\ %{}) do
     attrs
-    |> Map.put(:server_id, attrs[:server_id] || Db.Snowflake.new())
-    |> Map.put(:name, attrs[:name] || Db.Snowflake.new())
+    |> Map.put(:user_id, attrs[:user_id] || sequence(:user_id))
+    |> Map.put(:name, attrs[:name] || sequence(:channel_name, &"Channel #{&1}"))
     |> to_struct(Db.Channel)
   end
 

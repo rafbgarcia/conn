@@ -4,11 +4,10 @@ defmodule Db.Channel do
 
   alias Db.{Channel}
 
-  @primary_key [[:server_id, :deleted], :id]
+  @primary_key [:user_id, :id]
 
   table "channels" do
-    field(:server_id, :integer)
-    field(:deleted, :boolean)
+    field(:user_id, :integer)
     field(:id, :integer)
     field(:name, :string)
   end
@@ -17,13 +16,12 @@ defmodule Db.Channel do
     data =
       attrs
       |> Map.put(:id, Db.Snowflake.new())
-      |> Map.put(:deleted, false)
 
     cast(%Channel{}, data, [
-      :server_id,
-      :deleted,
+      :user_id,
       :id,
       :name
     ])
+    |> validate_required([:user_id, :id, :name])
   end
 end

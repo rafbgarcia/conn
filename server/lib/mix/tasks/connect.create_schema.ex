@@ -53,10 +53,10 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.channels(
-        server_id bigint,
-        deleted boolean,
+        user_id bigint,
         id bigint,
         name text,
+        server_id bigint,
         direct boolean,
         public boolean,
         broadcast boolean,
@@ -64,18 +64,16 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         broadcaster_ids set<int>,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY((server_id, deleted), id)
-      );
+        PRIMARY KEY(user_id, id)
+      ) WITH CLUSTERING ORDER BY (id DESC);
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.channel_users(
-        server_id bigint,
         channel_id bigint,
         user_id bigint,
-        joined_at timestamp,
         created_at timestamp,
         edited_at timestamp,
-        PRIMARY KEY(channel_id, joined_at, user_id)
+        PRIMARY KEY(channel_id, user_id)
       );
       """,
       """
