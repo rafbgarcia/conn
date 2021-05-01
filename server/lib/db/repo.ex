@@ -10,20 +10,7 @@ defmodule Db.Repo do
     Enum.map(result, & &1["table_name"])
   end
 
-  def count(queryable, fields \\ "*") do
-    table = queryable.__schema__(:queryable).from
-    query = "SELECT COUNT(#{fields}) FROM #{__keyspace__()}.#{table}"
-
-    case cql(query) do
-      {:ok, result} ->
-        result |> Enum.to_list() |> Enum.at(0) |> Map.get("count")
-
-      _ ->
-        :error
-    end
-  end
-
-  def queryable_to_string(queryable) do
+  def to_sql(queryable) do
     {iodata, values} =
       Cassandrax.Connection.all(
         Db.Repo,
