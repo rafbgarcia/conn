@@ -14,7 +14,7 @@ defmodule Connect.Graphql.CreateChannelMutationTest do
     """
   end
 
-  test "creates a private channel" do
+  test "users can create a new private channel" do
     user = insert(:user)
     server_id = "#{Db.Snowflake.new()}"
     type = Db.Channel.types().private
@@ -37,7 +37,7 @@ defmodule Connect.Graphql.CreateChannelMutationTest do
     assert Db.Repo.count(Db.Channel) == 1
   end
 
-  test "adds the owner as a member" do
+  test "the channel creator is added as an admin member" do
     user = insert(:user)
     data = run(query(1, "Rebels", 0), context: %{current_user: user})
 
@@ -45,6 +45,7 @@ defmodule Connect.Graphql.CreateChannelMutationTest do
 
     member = Db.Repo.one(Db.ChannelMember)
     assert member.user_id == user.id
+    assert member.admin
     assert "#{member.channel_id}" == data["channel"]["id"]
   end
 end

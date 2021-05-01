@@ -25,7 +25,10 @@ defmodule Connect.Graphql.NewMessageSubscriptionTest do
     """
   end
 
-  test "new messages can be subscribed to", %{socket: socket, current_user: current_user} do
+  test "users receive new messages in real-time for their channels", %{
+    socket: socket,
+    current_user: current_user
+  } do
     channel = insert(:channel, server_id: current_user.server_id)
     insert(:channel_member, user_id: current_user.id, channel_id: channel.id)
 

@@ -26,19 +26,19 @@ defmodule Connect.Graphql.ChannelsQueryTest do
     insert(:channel_member, channel_id: channel3.id, user_id: user.id)
 
     assert_response_matches(query(), context: %{current_user: user}) do
-      data
+      %{"channels" => channels}
     end
 
     assert Db.Repo.count(Db.Channel) == 3
     assert Db.Repo.count(Db.ChannelMember) == 2
-    assert length(data["channels"]) == 2
+    assert length(channels) == 2
 
-    assert_lists_equal(Enum.map(data["channels"], & &1["id"]), [
+    assert_lists_equal(Enum.map(channels, & &1["id"]), [
       "#{channel1.id}",
       "#{channel3.id}"
     ])
 
-    assert_lists_equal(Enum.map(data["channels"], & &1["name"]), ["Rebels", "Gabe"])
+    assert_lists_equal(Enum.map(channels, & &1["name"]), ["Rebels", "Gabe"])
   end
 
   test "returns empty when the user has no channels" do

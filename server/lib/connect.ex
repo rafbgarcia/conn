@@ -47,10 +47,10 @@ defmodule Connect do
     end)
   end
 
-  def thread_messages(message_id) do
+  def thread_messages(message_id, limit \\ 25) do
     Db.ThreadMessage
     |> where(parent_message_id: message_id)
-    |> limit(25)
+    |> limit(limit)
     |> Db.Repo.all()
   end
 

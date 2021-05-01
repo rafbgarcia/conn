@@ -7,7 +7,10 @@ defmodule ConnectWeb.Resolvers.Channels do
   def create(_parent, args, %{context: %{current_user: user}}) do
     attrs = Map.put(args, :owner_id, user.id)
     channel = Db.Channel.new(attrs) |> Db.Repo.insert!()
-    Db.ChannelMember.new(%{channel_id: channel.id, user_id: user.id}) |> Db.Repo.insert!()
+
+    Db.ChannelMember.new(%{channel_id: channel.id, user_id: user.id, admin: true})
+    |> Db.Repo.insert!()
+
     {:ok, channel}
   end
 

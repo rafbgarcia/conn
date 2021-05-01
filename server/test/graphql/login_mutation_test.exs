@@ -3,7 +3,7 @@ defmodule Connect.Graphql.LoginMutationTest do
 
   def scenario, do: "User Login"
 
-  test "returns access token" do
+  test "returns the access token, used to identify the user on upcoming requests" do
     account = insert(:account, password: "1234")
 
     query = """
@@ -21,7 +21,7 @@ defmodule Connect.Graphql.LoginMutationTest do
     assert is_binary(token)
   end
 
-  test "fails for invalid password" do
+  test "returns an error when user's password is incorrect" do
     account = insert(:account, password: "1234")
 
     query = """

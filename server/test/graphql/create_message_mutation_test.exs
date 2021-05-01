@@ -4,7 +4,7 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
 
   def scenario, do: "Create messages"
 
-  test "creates a message for the current user in a given channel" do
+  test "users can create messages in channels they are members" do
     user = insert(:user)
     channel = insert(:channel)
     insert(:channel_member, channel_id: channel.id, user_id: user.id)
@@ -30,7 +30,7 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
     assert message["authorId"] == user.id
   end
 
-  test "creates a message that points to another message" do
+  test "users can create thread messages in channels they are members" do
     user = insert(:user)
     channel = insert(:channel)
     parent_message = insert(:message, channel_id: channel.id)
@@ -60,34 +60,7 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
     assert message["authorId"] == user.id
   end
 
-  test "fails when for unauthorized users" do
-    query = """
-    mutation {
-      message: createMessage(channelId: "#{Db.Snowflake.new()}", content: "Hello world") {
-        id
-      }
-    }
-    """
-
-    assert_errors_equals(query, "unauthorized")
-  end
-
-  test "fails if user has no access to the channel" do
-    user = insert(:user)
-    channel = insert(:channel)
-
-    query = """
-    mutation {
-      createMessage(channelId: "#{channel.id}", content: "Hello") {
-        id
-      }
-    }
-    """
-
-    assert_errors_equals(query, "unauthorized", context: %{current_user: user})
-  end
-
-  test "checks that message's channel and given channel are the same" do
+  test "users can't send thread messages in channels they are not members" do
     user = insert(:user)
     channel = insert(:channel)
     insert(:channel_member, channel_id: channel.id, user_id: user.id)
@@ -108,5 +81,32 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
     """
 
     assert_errors_equals(query, "unauthorized", context: %{current_user: user})
+  end
+
+  test "users can't send messages in channels they are not members" do
+    user = insert(:user)
+    channel = insert(:channel)
+
+    query = """
+    mutation {
+      createMessage(channelId: "#{channel.id}", content: "Hello") {
+        id
+      }
+    }
+    """
+
+    assert_errors_equals(query, "unauthorized", context: %{current_user: user})
+  end
+
+  test "non-authenticated users can't create messages" do
+    query = """
+    mutation {
+      message: createMessage(channelId: "#{Db.Snowflake.new()}", content: "Hello world") {
+        id
+      }
+    }
+    """
+
+    assert_errors_equals(query, "unauthorized")
   end
 end

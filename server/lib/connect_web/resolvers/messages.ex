@@ -1,16 +1,28 @@
 defmodule ConnectWeb.Resolvers.Messages do
   alias Db.{Repo, Message, ThreadMessage}
 
-  def list(_parent, args, %{context: %{current_user: _current_user}}) do
-    message = Connect.channel_messages(args.channel_id)
-    {:ok, message}
+  def list(_parent, args, %{context: %{current_user: user}}) do
+    case Connect.channel_member?(args.channel_id, user.id) do
+      false ->
+        {:error, :unauthorized}
+
+      true ->
+        message = Connect.channel_messages(args.channel_id)
+        {:ok, message}
+    end
   end
 
   def list(_parent, _args, _resolutions), do: {:error, :unauthorized}
 
-  def thread_messages(parent_message, _args, %{context: %{current_user: _current_user}}) do
-    messages = Connect.thread_messages(parent_message.id)
-    {:ok, messages}
+  def thread_messages(_parent, args, %{context: %{current_user: user}}) do
+    case Connect.channel_member?(args.channel_id, user.id) do
+      false ->
+        {:error, :unauthorized}
+
+      true ->
+        messages = Connect.thread_messages(args.parent_message_id)
+        {:ok, messages}
+    end
   end
 
   def thread_messages(_parent, _args, _resolutions), do: {:error, :unauthorized}

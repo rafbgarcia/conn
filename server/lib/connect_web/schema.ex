@@ -14,6 +14,13 @@ defmodule ConnectWeb.Schema do
 
       resolve(&ConnectWeb.Resolvers.Messages.list/3)
     end
+
+    field :thread_messages, list_of(:message) do
+      arg(:channel_id, non_null(:bigint))
+      arg(:parent_message_id, non_null(:bigint))
+
+      resolve(&ConnectWeb.Resolvers.Messages.thread_messages/3)
+    end
   end
 
   mutation do
