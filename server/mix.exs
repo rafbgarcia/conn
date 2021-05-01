@@ -48,6 +48,7 @@ defmodule Connect.MixProject do
       {:guardian, "~> 2.1"},
       {:bcrypt_elixir, "~> 2.0"},
       {:benchee, "~> 1.0", only: :dev},
+      {:assertions, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false}
     ]
   end

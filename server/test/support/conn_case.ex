@@ -24,6 +24,7 @@ defmodule ConnectWeb.ConnCase do
       import Phoenix.ConnTest
       import ConnectWeb.ConnCase
       import Connect.Factory
+      import Assertions
       alias ConnectWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
