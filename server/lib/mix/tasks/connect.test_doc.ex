@@ -19,7 +19,7 @@ defmodule Mix.Tasks.Connect.TestsDoc do
     |> sanitize_tests()
     |> save_to_file("Acceptance")
 
-    capture_io(fn -> Mix.Task.run("test.coverage") end)
+    capture_io(fn -> Mix.Task.run("test", ["--cover"]) end)
     |> sanitize_coverage()
     |> save_to_file("Test Coverage")
   end

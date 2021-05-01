@@ -24,15 +24,10 @@ defmodule Db.ThreadMessage do
       |> Map.put(:id, id)
       |> Map.put(:created_at, DateTime.utc_now())
 
-    cast(%ThreadMessage{}, attrs, [
-      :parent_message_id,
-      :id,
-      :channel_id,
-      :content,
-      :author_id,
-      :created_at
-    ])
-    |> validate_required([:parent_message_id, :id, :channel_id, :author_id, :created_at])
+    permitted_fields = [:parent_message_id, :content, :id, :channel_id, :author_id, :created_at]
+
+    cast(%ThreadMessage{}, attrs, permitted_fields)
+    |> validate_required(permitted_fields)
   end
 
   def edit(message, attrs) do

@@ -11,4 +11,11 @@ defmodule Connect.GraphqlContextTest do
 
     assert conn.private.absinthe.context.current_user == user
   end
+
+  test "returns user for a given token" do
+    {token, user, _} = jwt()
+    authorization_header = "Bearer #{token}"
+
+    assert %{current_user: user} == ConnectWeb.GraphqlContext.build_context(authorization_header)
+  end
 end
