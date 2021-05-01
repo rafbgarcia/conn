@@ -14,8 +14,10 @@ defmodule ConnectWeb.Schema.Types do
   end
 
   object :member do
-    field(:channel_id, :bigint)
-    field(:user_id, :integer)
+    field(:channel_id, non_null(:bigint))
+    field(:user_id, non_null(:integer))
+    field(:admin, non_null(:boolean))
+    field(:broadcaster, non_null(:boolean))
   end
 
   object :message do

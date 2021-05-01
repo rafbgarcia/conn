@@ -1,11 +1,11 @@
 defmodule Connect.Graphql.CreateChannelMembersMutationTest do
   use Connect.IntegrationCase, truncate_tables: [:channel_members]
-  use ConnectWeb.ConnCase
+  use ConnectWeb.AbsintheCase
 
   test "add members to a channel" do
-    current_user = insert(:user)
+    user = insert(:user)
     channel_id = Db.Snowflake.new()
-    member_ids = Enum.to_list(1..5) -- [current_user.id]
+    member_ids = Enum.to_list(1..5) -- [user.id]
 
     query = """
     mutation {
@@ -13,16 +13,16 @@ defmodule Connect.Graphql.CreateChannelMembersMutationTest do
         channelId: "#{channel_id}",
         memberIds: [#{Enum.join(member_ids, ", ")}]
       ) {
-        userId
-        channelId
+        #{document_for(:member)}
       }
     }
     """
 
-    %{res: res} = gql(query, current_user: current_user)
-    assert res["errors"] == nil
-    members = res["data"]["members"]
-    member_ids_with_current_user = member_ids ++ [current_user.id]
+    assert_data_matches(query, context: %{current_user: user}) do
+      %{"members" => members}
+    end
+
+    member_ids_with_current_user = member_ids ++ [user.id]
     db_rows = Db.Repo.all(Db.ChannelMember)
 
     assert Db.Repo.count(Db.ChannelMember) == length(member_ids_with_current_user)

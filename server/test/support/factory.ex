@@ -39,6 +39,8 @@ defmodule Connect.Factory do
     attrs
     |> Map.put(:channel_id, attrs[:channel_id] || Db.Snowflake.new())
     |> Map.put(:user_id, attrs[:user_id] || sequence(:user_id))
+    |> Map.put(:admin, attrs[:admin] || false)
+    |> Map.put(:broadcaster, attrs[:broadcaster] || false)
     |> to_struct(Db.ChannelMember)
   end
 

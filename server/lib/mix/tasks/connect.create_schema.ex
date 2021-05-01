@@ -65,8 +65,6 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         name text,
         topic text,
         type int,
-        admin_ids set<bigint>,
-        broadcaster_ids set<bigint>,
         created_at timestamp,
         edited_at timestamp,
         PRIMARY KEY(server_id, id)
@@ -76,7 +74,8 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       CREATE TABLE IF NOT EXISTS #{keyspace}.channel_members(
         channel_id bigint,
         user_id bigint,
-        created_at timestamp,
+        admin boolean,
+        broadcaster boolean,
         PRIMARY KEY(channel_id, user_id)
       );
       """,
