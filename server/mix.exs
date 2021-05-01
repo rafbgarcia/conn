@@ -47,6 +47,7 @@ defmodule Connect.MixProject do
       {:absinthe_phoenix, "~> 2.0"},
       {:guardian, "~> 2.1"},
       {:bcrypt_elixir, "~> 2.0"},
+      {:benchee, "~> 1.0", only: :dev},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false}
     ]
   end
