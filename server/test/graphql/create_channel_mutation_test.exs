@@ -43,6 +43,6 @@ defmodule Connect.Graphql.CreateChannelMutationTest do
 
     member = Db.Repo.one(Db.ChannelMember)
     assert member.user_id == user.id
-    assert member.channel_id == data["channel"]["id"]
+    assert "#{member.channel_id}" == data["channel"]["id"]
   end
 end
