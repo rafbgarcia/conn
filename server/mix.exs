@@ -10,7 +10,9 @@ defmodule Connect.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      preferred_cli_env: [tests_doc: :test],
+      test_coverage: [ignore_modules: ignore_modules()]
     ]
   end
 
@@ -63,7 +65,42 @@ defmodule Connect.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "connect.create_schema"],
-      test_watch: ["test.watch --stale --max-failures 1"]
+      test_watch: ["test.watch --stale --max-failures 1"],
+      tests_doc: ["connect.tests_doc"]
+    ]
+  end
+
+  defp ignore_modules do
+    [
+      Mix.Tasks.Connect.CreateSchema,
+      Mix.Tasks.Connect.RecreateSchema,
+      Mix.Tasks.Connect.TestsDoc,
+      Connect.Application,
+      ConnectWeb,
+      ConnectWeb.ErrorHelpers,
+      ConnectWeb.ErrorView,
+      ConnectWeb.Gettext,
+      ConnectWeb.Guardia,
+      ConnectWeb.LayoutView,
+      ConnectWeb.PageController,
+      ConnectWeb.PageView,
+      ConnectWeb.Route,
+      ConnectWeb.Telemetry,
+      ConnectWeb.Schema.Types,
+      ConnectWeb.Schema.ScalarTypes,
+      ConnectWeb.Router,
+      ConnectWeb.Guardian.Plug,
+      ConnectWeb.Router.Helpers,
+      Connect.Factory,
+      Connect.FactorySequence,
+      Connect.IntegrationCase,
+      ConnectWeb.AbsintheCase,
+      ConnectWeb.ChannelCase,
+      ConnectWeb.ConnCase,
+      ConnectWeb.Endpoint,
+      ConnectWeb.Schema,
+      ConnectWeb.Schema.Compiled,
+      ConnectWeb.SubscriptionCase
     ]
   end
 end

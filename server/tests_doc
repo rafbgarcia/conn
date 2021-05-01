@@ -1,0 +1,82 @@
+Cover compiling modules ...
+
+Connect.Graphql.LoginMutationTest [test/graphql/login_mutation_test.exs]
+  * test returns access token [L#4][32m
+  * test returns access token (329.0ms) [L#4][0m
+  * test fails for invalid password [L#22][32m
+  * test fails for invalid password (12.3ms) [L#22][0m
+
+Connect.Graphql.CreateMessageMutationTest [test/graphql/create_message_mutation_test.exs]
+  * test fails if user has no access to the channel [L#73][32m
+  * test fails if user has no access to the channel (14.8ms) [L#73][0m
+  * test Creates a message for the current user in a given channel [L#5][32m
+  * test Creates a message for the current user in a given channel (18.3ms) [L#5][0m
+  * test checks that message's channel and given channel are the same [L#88][32m
+  * test checks that message's channel and given channel are the same (20.4ms) [L#88][0m
+  * test fails when for unauthorized users [L#61][32m
+  * test fails when for unauthorized users (0.7ms) [L#61][0m
+  * test creates a message that points to another message [L#31][32m
+  * test creates a message that points to another message (30.6ms) [L#31][0m
+
+Connect.Graphql.ChannelsQueryTest [test/graphql/channels_query_test.exs]
+  * test returns channels that the user is a member of [L#15][32m
+  * test returns channels that the user is a member of (273.7ms) [L#15][0m
+  * test returns empty when the user has no channels [L#42][32m
+  * test returns empty when the user has no channels (192.0ms) [L#42][0m
+
+Connect.Graphql.CreateChannelMembersMutationTest [test/graphql/create_channel_members_mutation_test.exs]
+  * test admins can add members [L#5][32m
+  * test admins can add members (121.0ms) [L#5][0m
+  * test non-admins can't add members [L#40][32m
+  * test non-admins can't add members (137.7ms) [L#40][0m
+
+Connect.Graphql.CreateChannelMutationTest [test/graphql/create_channel_mutation_test.exs]
+  * test creates a private channel [L#15][32m
+  * test creates a private channel (218.5ms) [L#15][0m
+  * test adds the owner as a member [L#38][32m
+  * test adds the owner as a member (239.7ms) [L#38][0m
+
+Connect.Graphql.NewMessageSubscriptionTest [test/graphql/new_message_subscription_test.exs]
+  * test new messages can be subscribed to [L#26][32m
+  * test new messages can be subscribed to (41.0ms) [L#26][0m
+
+Connect.Graphql.EditMessageMutationTest [test/graphql/edit_message_mutation_test.exs]
+  * test Edits a message [L#4][32m
+  * test Edits a message (34.7ms) [L#4][0m
+
+Connect.Graphql.MessagesQueryTest [test/graphql/messages_query_test.exs]
+  * test fetch thread messages sorted by most recent [L#4][32m
+  * test fetch thread messages sorted by most recent (29.6ms) [L#4][0m
+
+
+Finished in 1.9 seconds
+[32m16 tests, 0 failures[0m
+
+Randomized with seed 307248
+
+Generating cover results ...
+
+Percentage | Module
+-----------|--------------------------
+[31m     0.00%[0m | Db.Server[0m
+[31m    20.00%[0m | Db.Repo[0m
+[31m    66.67%[0m | Db.ThreadMessage[0m
+[31m    70.00%[0m | ConnectWeb.GraphqlContext[0m
+[31m    72.73%[0m | Db.Snowflake[0m
+[31m    83.33%[0m | Db.ChannelMember[0m
+[32m   100.00%[0m | Connect[0m
+[32m   100.00%[0m | ConnectWeb.Guardian[0m
+[32m   100.00%[0m | ConnectWeb.Resolvers.Auth[0m
+[32m   100.00%[0m | ConnectWeb.Resolvers.Badges[0m
+[32m   100.00%[0m | ConnectWeb.Resolvers.ChannelMembers[0m
+[32m   100.00%[0m | ConnectWeb.Resolvers.Channels[0m
+[32m   100.00%[0m | ConnectWeb.Resolvers.Messages[0m
+[32m   100.00%[0m | ConnectWeb.UserSocket[0m
+[32m   100.00%[0m | Db.Account[0m
+[32m   100.00%[0m | Db.Channel[0m
+[32m   100.00%[0m | Db.Message[0m
+[32m   100.00%[0m | Db.User[0m
+-----------|--------------------------
+[31m    88.15%[0m | Total[0m
+
+Generated HTML coverage results in "cover" directory
