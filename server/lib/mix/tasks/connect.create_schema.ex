@@ -81,6 +81,9 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       );
       """,
       """
+      CREATE INDEX member_channels ON #{keyspace}.channel_members(user_id);
+      """,
+      """
       CREATE TABLE IF NOT EXISTS #{keyspace}.messages(
         channel_id bigint,
         bucket int,
