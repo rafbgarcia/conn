@@ -28,11 +28,11 @@ defmodule Connect.Graphql.NewMessageSubscriptionTest do
 
     # setup a subscription
     ref = push_doc(socket, subscription(channel.id))
-    assert_reply ref, :ok, %{subscriptionId: subscription_id}
+    assert_reply(ref, :ok, %{subscriptionId: subscription_id})
 
     # run a mutation to trigger the subscription
     ref = push_doc(socket, mutation(channel.id, "Hello world"))
-    assert_reply ref, :ok, reply
+    assert_reply(ref, :ok, reply)
 
     assert %{
              data: %{
@@ -45,7 +45,7 @@ defmodule Connect.Graphql.NewMessageSubscriptionTest do
            } = reply
 
     # check to see if we got subscription data
-    assert_push "subscription:data", push
+    assert_push("subscription:data", push)
 
     assert %{
              result: %{data: %{"newMessage" => %{"message" => %{"content" => "Hello world"}}}},

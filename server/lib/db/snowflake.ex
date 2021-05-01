@@ -12,6 +12,7 @@ defmodule Db.Snowflake do
   def bucket_range(start_id, end_id \\ nil) do
     a = bucket(end_id || new())
     b = bucket(start_id)
+
     cond do
       a > b -> a..b
       true -> b..a
