@@ -2,6 +2,8 @@ defmodule Connect.Graphql.ChannelsQueryTest do
   use Connect.IntegrationCase, truncate_tables: [:channels, :channel_members]
   use ConnectWeb.AbsintheCase
 
+  def scenario, do: "Get current user's channels"
+
   def query do
     """
     query {

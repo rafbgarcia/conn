@@ -1,6 +1,8 @@
 defmodule Connect.Graphql.LoginMutationTest do
   use ConnectWeb.AbsintheCase
 
+  def scenario, do: "User Login"
+
   test "returns access token" do
     account = insert(:account, password: "1234")
 

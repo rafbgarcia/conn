@@ -2,6 +2,8 @@ defmodule Connect.Graphql.CreateChannelMutationTest do
   use Connect.IntegrationCase, truncate_tables: [:channels, :channel_members]
   use ConnectWeb.AbsintheCase
 
+  def scenario, do: "Create a new channel"
+
   def query(server_id, name, type) do
     """
     mutation {

@@ -2,6 +2,8 @@ defmodule Connect.Graphql.CreateChannelMembersMutationTest do
   use Connect.IntegrationCase, truncate_tables: [:channel_members]
   use ConnectWeb.AbsintheCase
 
+  def scenario, do: "Add members to a channel"
+
   test "admins can add members" do
     user = insert(:user)
     channel = insert(:channel)

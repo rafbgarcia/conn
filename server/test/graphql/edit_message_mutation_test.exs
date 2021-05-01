@@ -1,6 +1,8 @@
 defmodule Connect.Graphql.EditMessageMutationTest do
   use ConnectWeb.ConnCase
 
+  def scenario, do: "Edit messages"
+
   test "Edits a message" do
     user = insert(:user)
     message = insert(:message, author_id: user.id, content: "Hey")

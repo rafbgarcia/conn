@@ -1,6 +1,8 @@
 defmodule Connect.Graphql.MessagesQueryTest do
   use ConnectWeb.ConnCase
 
+  def scenario, do: "Fetch a channel's messages"
+
   test "fetch thread messages sorted by most recent" do
     message = insert(:message, content: "Parent")
     attrs = %{channel_id: message.channel_id, parent_message_id: message.id}

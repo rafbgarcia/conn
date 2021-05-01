@@ -1,6 +1,8 @@
 defmodule Connect.Graphql.NewMessageSubscriptionTest do
   use ConnectWeb.SubscriptionCase
 
+  def scenario, do: "Real-time channel messages"
+
   def subscription(channel_id) do
     """
     subscription {

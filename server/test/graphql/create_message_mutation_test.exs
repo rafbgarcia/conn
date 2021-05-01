@@ -2,7 +2,9 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
   use ConnectWeb.ConnCase
   use ConnectWeb.AbsintheCase
 
-  test "Creates a message for the current user in a given channel" do
+  def scenario, do: "Create messages"
+
+  test "creates a message for the current user in a given channel" do
     user = insert(:user)
     channel = insert(:channel)
     insert(:channel_member, channel_id: channel.id, user_id: user.id)
