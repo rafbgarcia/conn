@@ -69,4 +69,11 @@ defmodule Connect do
     |> where(login: login)
     |> Repo.one()
   end
+
+  def is_channel_member?(user_id, channel_id) do
+    Db.ChannelMember
+    |> where(channel_id: channel_id)
+    |> where(user_id: user_id)
+    |> Repo.count() > 0
+  end
 end

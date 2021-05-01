@@ -25,6 +25,7 @@ defmodule Connect.Graphql.NewMessageSubscriptionTest do
 
   test "new messages can be subscribed to", %{socket: socket, current_user: current_user} do
     channel = insert(:channel, server_id: current_user.server_id)
+    insert(:channel_member, user_id: current_user.id, channel_id: channel.id)
 
     # setup a subscription
     ref = push_doc(socket, subscription(channel.id))

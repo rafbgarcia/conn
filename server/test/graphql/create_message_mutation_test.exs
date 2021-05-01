@@ -1,10 +1,15 @@
 defmodule Connect.Graphql.CreateMessageMutationTest do
   use ConnectWeb.ConnCase
+  use ConnectWeb.AbsintheCase
 
   test "Creates a message for the current user in a given channel" do
+    user = insert(:user)
+    channel = insert(:channel)
+    insert(:channel_member, channel_id: channel.id, user_id: user.id)
+
     query = """
     mutation {
-      message: createMessage(channelId: "#{Db.Snowflake.new()}", content: "Hello world") {
+      message: createMessage(channelId: "#{channel.id}", content: "Hello world") {
         id
         channelId
         authorId
@@ -13,13 +18,14 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
     }
     """
 
-    %{res: res, user: current_user} = gql(query)
+    assert_response_matches(query, context: %{current_user: user}) do
+      %{"message" => message}
+    end
 
-    message = res["data"]["message"]
     assert is_binary(message["id"])
     assert is_binary(message["channelId"])
     assert message["content"] == "Hello world"
-    assert message["authorId"] == current_user.id
+    assert message["authorId"] == user.id
   end
 
   test "creates a message that points to another message" do
@@ -33,11 +39,7 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
           parentMessageId: "#{parent_message.id}",
           content: "Message inside a thread"
         ) {
-          id
-          channelId
-          authorId
-          content
-          parentMessageId
+          #{document_for(:message)}
         }
       }
       """)
@@ -62,11 +64,21 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
     }
     """
 
-    res = gql_with_token(query, "invalid")
-
-    assert Enum.at(res["errors"], 0)["message"] == "unauthorized"
+    assert_errors_equals(query, "unauthorized")
   end
 
-  test "checks if user has access to the channel" do
+  test "fails if user has no access to the channel" do
+    user = insert(:user)
+    channel = insert(:channel)
+
+    query = """
+    mutation {
+      createMessage(channelId: "#{channel.id}", content: "Hello") {
+        id
+      }
+    }
+    """
+
+    assert_errors_equals(query, "unauthorized", context: %{current_user: user})
   end
 end

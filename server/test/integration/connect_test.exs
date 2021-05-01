@@ -1,4 +1,4 @@
-defmodule ConnectTest do
+defmodule Connect.ConnectTest do
   use ConnectWeb.ConnCase, async: true
   use Connect.IntegrationCase, truncate_tables: [:channels, :messages]
 

@@ -29,10 +29,16 @@ defmodule ConnectWeb.Resolvers.Messages do
   end
 
   def create(_parent, args, %{context: %{current_user: current_user}}) do
-    attrs = Map.put(args, :author_id, current_user.id)
-    message = Repo.insert!(Message.new(attrs))
+    case Connect.is_channel_member?(current_user.id, args.channel_id) do
+      false ->
+        {:error, :unauthorized}
 
-    {:ok, message}
+      true ->
+        attrs = Map.put(args, :author_id, current_user.id)
+        message = Repo.insert!(Message.new(attrs))
+
+        {:ok, message}
+    end
   end
 
   def create(_parent, _args, _resolutions), do: {:error, :unauthorized}
