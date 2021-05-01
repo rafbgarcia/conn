@@ -5,9 +5,18 @@ defmodule Mix.Tasks.Connect.CreateSchema do
 
   def run(_args) do
     Mix.Task.run("app.start")
+    ensure_keyspace()
 
     schema()
     |> Enum.each(&({:ok, _} = Db.Repo.cql(&1)))
+  end
+
+  defp ensure_keyspace do
+    {:ok, _} =
+      Db.Repo.cql("""
+      CREATE KEYSPACE IF NOT EXISTS #{Db.Repo.__keyspace__()}
+      WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}
+      """)
   end
 
   defp schema do
