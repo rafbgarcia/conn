@@ -47,4 +47,45 @@ defmodule Connect.ConnectTest do
     assert db_account.password == account.password
     assert Bcrypt.verify_pass("1234", db_account.password)
   end
+
+  test ".channels_for" do
+    user = insert(:user)
+    channel1 = insert(:channel, server_id: user.server_id)
+    channel2 = insert(:channel, server_id: user.server_id)
+    insert(:channel)
+
+    assert length(Connect.channels_for(user)) == 0
+
+    insert(:channel_member, user_id: user.id, channel_id: channel1.id)
+    insert(:channel_member, user_id: user.id, channel_id: channel2.id)
+    assert length(Connect.channels_for(user)) == 2
+  end
+
+  test ".channel_member?" do
+    user = insert(:user)
+    channel = insert(:channel)
+
+    assert Connect.channel_member?(channel.id, user.id) == false
+
+    insert(:channel_member, user_id: user.id, channel_id: channel.id)
+    assert Connect.channel_member?(channel.id, user.id) == true
+  end
+
+  test ".channel_message?" do
+    channel = insert(:channel)
+    message = insert(:message, channel_id: channel.id)
+
+    assert Connect.channel_message?(channel.id, message.id + 1) == false
+    assert Connect.channel_message?(channel.id, message.id) == true
+  end
+
+  test ".thread_messages" do
+    parent_message = insert(:message)
+    assert length(Connect.thread_messages(parent_message.id)) == 0
+
+    for _ <- 1..10,
+        do: insert(:thread_message, parent_message_id: parent_message.id)
+
+    assert length(Connect.thread_messages(parent_message.id)) == 10
+  end
 end

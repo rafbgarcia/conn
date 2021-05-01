@@ -25,7 +25,7 @@ defmodule Connect.Graphql.ChannelsQueryTest do
     insert(:channel_member, channel_id: channel1.id, user_id: user.id)
     insert(:channel_member, channel_id: channel3.id, user_id: user.id)
 
-    assert_response_matches(query(), context: %{current_user: user}) do
+    assert_data_matches(query(), context: %{current_user: user}) do
       %{"channels" => channels}
     end
 
@@ -44,7 +44,7 @@ defmodule Connect.Graphql.ChannelsQueryTest do
   test "returns empty when the user has no channels" do
     user = insert(:user)
 
-    assert_response_matches(query(), context: %{current_user: user}) do
+    assert_data_matches(query(), context: %{current_user: user}) do
       %{"channels" => []}
     end
   end
