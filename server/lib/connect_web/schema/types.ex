@@ -21,19 +21,19 @@ defmodule ConnectWeb.Schema.Types do
   end
 
   object :message do
-    field(:id, :bigint)
-    field(:channel_id, :bigint)
-    field(:parent_message_id, :bigint)
-    field(:author_id, :integer)
-    field(:content, :string)
-    field(:created_at, :string)
+    field(:id, non_null(:bigint))
+    field(:channel_id, non_null(:bigint))
+    field(:author_id, non_null(:integer))
+    field(:content, non_null(:string))
+    field(:created_at, non_null(:string))
 
-    field(:edited, :boolean) do
+    field(:edited, non_null(:boolean)) do
       resolve(fn message, _, _ ->
         {:ok, is_struct(message.edited_at)}
       end)
     end
 
+    field(:parent_message_id, :bigint)
     field(:edited_at, :string)
   end
 
