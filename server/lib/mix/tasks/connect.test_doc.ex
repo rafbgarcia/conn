@@ -39,7 +39,7 @@ defmodule Mix.Tasks.Connect.TestsDoc do
   end
 
   defp save_to_file(output, name) do
-    {:ok, file} = File.open("./docs/#{name}.md", [:write])
+    {:ok, file} = File.open("../docs/#{name}.md", [:write])
     IO.binwrite(file, output)
     File.close(file)
   end
