@@ -84,4 +84,27 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
 
     assert_errors_equals(query, "unauthorized", context: %{current_user: user})
   end
+
+  test "checks that message's channel and given channel are the same" do
+    user = insert(:user)
+    channel = insert(:channel)
+    insert(:channel_member, channel_id: channel.id, user_id: user.id)
+    # Message belongs to a channel that the user is not a member of
+    diff_channel = insert(:channel)
+    parent_message = insert(:message, channel_id: diff_channel.id)
+
+    query = """
+    mutation {
+      message: createMessage(
+        channelId: "#{channel.id}",
+        parentMessageId: "#{parent_message.id}",
+        content: "Hello"
+      ) {
+        id
+      }
+    }
+    """
+
+    assert_errors_equals(query, "unauthorized", context: %{current_user: user})
+  end
 end

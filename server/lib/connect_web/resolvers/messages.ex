@@ -16,14 +16,14 @@ defmodule ConnectWeb.Resolvers.Messages do
   def thread_messages(_parent, _args, _resolutions), do: {:error, :unauthorized}
 
   def create(_parent, args, %{context: %{current_user: current_user}}) do
-    case Connect.channel_member?(current_user.id, args.channel_id) do
-      false ->
+    with true <- Connect.channel_member?(args.channel_id, current_user.id),
+         true <- thread_in_channel?(args.channel_id, args[:parent_message_id]) do
+      attrs = Map.put(args, :author_id, current_user.id)
+      message = Repo.insert!(changeset(attrs))
+      {:ok, message}
+    else
+      _ ->
         {:error, :unauthorized}
-
-      true ->
-        attrs = Map.put(args, :author_id, current_user.id)
-        message = Repo.insert!(changeset(attrs))
-        {:ok, message}
     end
   end
 
@@ -48,7 +48,13 @@ defmodule ConnectWeb.Resolvers.Messages do
 
   def edit(_parent, _args, _resolutions), do: {:error, :unauthorized}
 
-  defp changeset(%{parent_message_id: _} = attrs), do: ThreadMessage.new(attrs)
+  defp changeset(attrs) when is_map_key(attrs, :parent_message_id), do: ThreadMessage.new(attrs)
 
   defp changeset(attrs), do: Message.new(attrs)
+
+  defp thread_in_channel?(_, nil), do: true
+
+  defp thread_in_channel?(channel_id, parent_message_id) do
+    Connect.channel_message?(channel_id, parent_message_id)
+  end
 end

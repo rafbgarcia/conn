@@ -70,10 +70,18 @@ defmodule Connect do
     |> Repo.one()
   end
 
-  def channel_member?(user_id, channel_id) do
+  def channel_member?(channel_id, user_id) do
     Db.ChannelMember
     |> where(channel_id: channel_id)
     |> where(user_id: user_id)
+    |> Repo.count() > 0
+  end
+
+  def channel_message?(channel_id, message_id) do
+    Message
+    |> where(channel_id: channel_id)
+    |> where(bucket: Db.Snowflake.bucket(message_id))
+    |> where(id: message_id)
     |> Repo.count() > 0
   end
 end
