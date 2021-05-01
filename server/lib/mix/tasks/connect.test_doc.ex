@@ -10,6 +10,7 @@ defmodule Mix.Tasks.Connect.TestsDoc do
     capture_io(fn ->
       Mix.Task.run("test", [
         "--trace",
+        "--seed=1",
         "test/graphql"
       ])
     end)
