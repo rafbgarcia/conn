@@ -22,4 +22,14 @@ defmodule Db.Repo do
         :error
     end
   end
+
+  def queryable_to_string(queryable) do
+    {iodata, values} =
+      Cassandrax.Connection.all(
+        Db.Repo,
+        queryable
+      )
+
+    {IO.iodata_to_binary(iodata), values}
+  end
 end
