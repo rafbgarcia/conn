@@ -70,7 +70,7 @@ defmodule Connect do
     |> Repo.one()
   end
 
-  def is_channel_member?(user_id, channel_id) do
+  def channel_member?(user_id, channel_id) do
     Db.ChannelMember
     |> where(channel_id: channel_id)
     |> where(user_id: user_id)

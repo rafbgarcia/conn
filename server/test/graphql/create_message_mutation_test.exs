@@ -29,30 +29,33 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
   end
 
   test "creates a message that points to another message" do
-    parent_message = insert(:message)
+    user = insert(:user)
+    channel = insert(:channel)
+    parent_message = insert(:message, channel_id: channel.id)
+    insert(:channel_member, channel_id: channel.id, user_id: user.id)
 
-    %{res: res, user: current_user} =
-      gql("""
-      mutation {
-        message: createMessage(
-          channelId: "#{parent_message.channel_id}",
-          parentMessageId: "#{parent_message.id}",
-          content: "Message inside a thread"
-        ) {
-          #{document_for(:message)}
-        }
+    query = """
+    mutation {
+      message: createMessage(
+        channelId: "#{parent_message.channel_id}",
+        parentMessageId: "#{parent_message.id}",
+        content: "Message inside a thread"
+      ) {
+        #{document_for(:message)}
       }
-      """)
+    }
+    """
 
-    assert res["errors"] == nil
+    assert_data_matches(query, context: %{current_user: user}) do
+      %{"message" => message}
+    end
 
-    message = res["data"]["message"]
     assert message["parentMessageId"] == "#{parent_message.id}"
     assert message["id"] != parent_message.id
     assert is_binary(message["id"])
     assert is_binary(message["channelId"])
     assert message["content"] == "Message inside a thread"
-    assert message["authorId"] == current_user.id
+    assert message["authorId"] == user.id
   end
 
   test "fails when for unauthorized users" do

@@ -11,6 +11,14 @@ defmodule ConnectWeb.AbsintheCase do
         data
       end
 
+      defmacro assert_data_matches(document, options \\ [], do: expr) do
+        quote do
+          {:ok, data} = Absinthe.run(unquote(document), ConnectWeb.Schema, unquote(options))
+          ExUnit.Assertions.assert(data[:errors] == nil)
+          ExUnit.Assertions.assert(%{data: unquote(expr)} = data)
+        end
+      end
+
       def assert_errors_equals(document, expected, options \\ [])
 
       def assert_errors_equals(document, expected, options) when is_list(expected) do

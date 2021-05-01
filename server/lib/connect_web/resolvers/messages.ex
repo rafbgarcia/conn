@@ -3,7 +3,6 @@ defmodule ConnectWeb.Resolvers.Messages do
 
   def list(_parent, args, %{context: %{current_user: _current_user}}) do
     message = Connect.channel_messages(args.channel_id)
-
     {:ok, message}
   end
 
@@ -11,32 +10,19 @@ defmodule ConnectWeb.Resolvers.Messages do
 
   def thread_messages(parent_message, _args, %{context: %{current_user: _current_user}}) do
     messages = Connect.thread_messages(parent_message.id)
-
     {:ok, messages}
   end
 
   def thread_messages(_parent, _args, _resolutions), do: {:error, :unauthorized}
 
-  def create(
-        _parent,
-        %{parent_message_id: _} = args,
-        %{context: %{current_user: current_user}}
-      ) do
-    attrs = Map.put(args, :author_id, current_user.id)
-    message = Repo.insert!(ThreadMessage.new(attrs))
-
-    {:ok, message}
-  end
-
   def create(_parent, args, %{context: %{current_user: current_user}}) do
-    case Connect.is_channel_member?(current_user.id, args.channel_id) do
+    case Connect.channel_member?(current_user.id, args.channel_id) do
       false ->
         {:error, :unauthorized}
 
       true ->
         attrs = Map.put(args, :author_id, current_user.id)
-        message = Repo.insert!(Message.new(attrs))
-
+        message = Repo.insert!(changeset(attrs))
         {:ok, message}
     end
   end
@@ -61,4 +47,8 @@ defmodule ConnectWeb.Resolvers.Messages do
   end
 
   def edit(_parent, _args, _resolutions), do: {:error, :unauthorized}
+
+  defp changeset(%{parent_message_id: _} = attrs), do: ThreadMessage.new(attrs)
+
+  defp changeset(attrs), do: Message.new(attrs)
 end
