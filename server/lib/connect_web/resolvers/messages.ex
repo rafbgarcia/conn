@@ -45,6 +45,9 @@ defmodule ConnectWeb.Resolvers.Messages do
     message = Connect.get_message(args.channel_id, args.message_id)
 
     case message.author_id == user.id do
+      false ->
+        {:error, :unauthorized}
+
       true ->
         message =
           message
@@ -52,9 +55,6 @@ defmodule ConnectWeb.Resolvers.Messages do
           |> Repo.update!()
 
         {:ok, message}
-
-      false ->
-        {:error, :unauthorized}
     end
   end
 
