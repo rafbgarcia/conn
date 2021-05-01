@@ -1,14 +1,12 @@
 defmodule Connect do
   import Cassandrax.Query
 
-  alias Db.{Repo, Account, Message, ThreadMessage, User}
-
   def get_message(channel_id, message_id) do
-    Message
+    Db.Message
     |> where(channel_id: channel_id)
     |> where(bucket: Db.Snowflake.bucket(message_id))
     |> where(id: message_id)
-    |> Repo.one()
+    |> Db.Repo.one()
   end
 
   def channels_for(user, limit \\ 50) do
@@ -16,7 +14,7 @@ defmodule Connect do
     |> select([:channel_id])
     |> where(user_id: user.id)
     |> limit(limit)
-    |> Repo.all()
+    |> Db.Repo.all()
     |> case do
       [] ->
         []
@@ -27,7 +25,7 @@ defmodule Connect do
         Db.Channel
         |> where(server_id: user.server_id)
         |> where(id: channel_ids)
-        |> Repo.all()
+        |> Db.Repo.all()
     end
   end
 
@@ -36,11 +34,11 @@ defmodule Connect do
     |> Enum.reduce_while([], fn bucket, messages ->
       if length(messages) < limit do
         next_messages =
-          Message
+          Db.Message
           |> where(channel_id: channel_id)
           |> where(bucket: bucket)
           |> limit(limit - length(messages))
-          |> Repo.all()
+          |> Db.Repo.all()
 
         {:cont, messages ++ next_messages}
       else
@@ -50,38 +48,49 @@ defmodule Connect do
   end
 
   def thread_messages(message_id) do
-    ThreadMessage
+    Db.ThreadMessage
     |> where(parent_message_id: message_id)
     |> limit(25)
-    |> Repo.all()
+    |> Db.Repo.all()
   end
 
   def get_user(server_id, id) do
-    User
+    Db.User
     |> where(server_id: server_id)
     |> where(id: id)
-    |> Repo.one()
+    |> Db.Repo.one()
   end
 
   def get_account(server_id, login) do
-    Account
+    Db.Account
     |> where(server_id: server_id)
     |> where(login: login)
-    |> Repo.one()
+    |> Db.Repo.one()
   end
 
   def channel_member?(channel_id, user_id) do
     Db.ChannelMember
     |> where(channel_id: channel_id)
     |> where(user_id: user_id)
-    |> Repo.count() > 0
+    |> Db.Repo.count() > 0
   end
 
   def channel_message?(channel_id, message_id) do
-    Message
+    Db.Message
     |> where(channel_id: channel_id)
     |> where(bucket: Db.Snowflake.bucket(message_id))
     |> where(id: message_id)
-    |> Repo.count() > 0
+    |> Db.Repo.count() > 0
+  end
+
+  def channel_admin?(channel_id, user_id) do
+    Db.ChannelMember
+    |> where(channel_id: channel_id)
+    |> where(user_id: user_id)
+    |> Db.Repo.one()
+    |> case do
+      nil -> false
+      member -> member.admin
+    end
   end
 end

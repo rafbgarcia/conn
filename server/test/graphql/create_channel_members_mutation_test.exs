@@ -2,16 +2,17 @@ defmodule Connect.Graphql.CreateChannelMembersMutationTest do
   use Connect.IntegrationCase, truncate_tables: [:channel_members]
   use ConnectWeb.AbsintheCase
 
-  test "add members to a channel" do
+  test "admins can add members" do
     user = insert(:user)
-    channel_id = Db.Snowflake.new()
-    member_ids = Enum.to_list(1..5) -- [user.id]
+    channel = insert(:channel)
+    insert(:channel_member, channel_id: channel.id, user_id: user.id, admin: true)
+    new_member_ids = Enum.to_list(20_000..20_001)
 
     query = """
     mutation {
       members: createMembers(
-        channelId: "#{channel_id}",
-        memberIds: [#{Enum.join(member_ids, ", ")}]
+        channelId: "#{channel.id}",
+        memberIds: [#{Enum.join(new_member_ids, ", ")}]
       ) {
         #{document_for(:member)}
       }
@@ -22,15 +23,36 @@ defmodule Connect.Graphql.CreateChannelMembersMutationTest do
       %{"members" => members}
     end
 
-    member_ids_with_current_user = member_ids ++ [user.id]
-    db_rows = Db.Repo.all(Db.ChannelMember)
+    assert Enum.map(members, &{&1["channelId"], &1["userId"], &1["admin"], &1["broadcaster"]}) ==
+             [{"#{channel.id}", 20000, false, false}, {"#{channel.id}", 20001, false, false}]
 
-    assert Db.Repo.count(Db.ChannelMember) == length(member_ids_with_current_user)
+    db_rows =
+      Db.Repo.all(Db.ChannelMember)
+      |> Enum.map(&{&1.channel_id, &1.user_id, &1.admin, &1.broadcaster})
 
-    assert_all_have_value(members, "channelId", "#{channel_id}")
-    assert_lists_equal(Enum.map(members, & &1["userId"]), member_ids_with_current_user)
+    assert db_rows == [
+             {channel.id, user.id, true, false},
+             {channel.id, 20000, false, false},
+             {channel.id, 20001, false, false}
+           ]
+  end
 
-    assert_all_have_value(db_rows, :channel_id, channel_id)
-    assert_lists_equal(Enum.map(db_rows, & &1.user_id), member_ids_with_current_user)
+  test "non-admins can't add members" do
+    user = insert(:user)
+    channel = insert(:channel)
+    insert(:channel_member, channel_id: channel.id, user_id: user.id, admin: false)
+
+    query = """
+    mutation {
+      members: createMembers(
+        channelId: "#{channel.id}",
+        memberIds: [1,2]
+      ) {
+        #{document_for(:member)}
+      }
+    }
+    """
+
+    assert_errors_equals(query, "unauthorized", context: %{current_user: user})
   end
 end
