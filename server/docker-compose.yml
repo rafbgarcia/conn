@@ -3,6 +3,6 @@ version: '3'
 services:
   db:
     image: scylladb/scylla
-    container_name: db
+    container_name: connect_scylladb
     ports:
       - 9042:9042
