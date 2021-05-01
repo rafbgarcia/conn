@@ -34,11 +34,11 @@ defmodule Mix.Tasks.Connect.TestsDoc do
 
   defp sanitize_coverage(text) do
     text
+    |> String.replace("", "")
+    |> String.replace(~r/\[\d*m */, "")
     |> String.split("\n")
     |> Enum.slice(2..-3)
     |> Enum.join("\n")
-    |> String.replace("", "")
-    |> String.replace(~r/\[\d*m/, "")
   end
 
   defp save_to_file(output, name) do
