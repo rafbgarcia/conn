@@ -42,7 +42,7 @@ defmodule Connect.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:cassandrax, "~> 0.0.3"},
+      {:cassandrax, "~> 0.0.3", git: "https://github.com/rafbgarcia/cassandrax.git"},
       {:snowflake, "~> 1.0.0"},
       {:absinthe_phoenix, "~> 2.0"},
       {:guardian, "~> 2.1"},
