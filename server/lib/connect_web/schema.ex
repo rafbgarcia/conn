@@ -33,6 +33,13 @@ defmodule ConnectWeb.Schema do
       resolve(&ConnectWeb.Resolvers.Channels.create/3)
     end
 
+    field :create_members, list_of(:member) do
+      arg(:channel_id, non_null(:bigint))
+      arg(:member_ids, non_null(list_of(:integer)))
+
+      resolve(&ConnectWeb.Resolvers.ChannelMembers.create/3)
+    end
+
     field :create_message, :message do
       arg(:channel_id, non_null(:bigint))
       arg(:parent_message_id, :bigint)

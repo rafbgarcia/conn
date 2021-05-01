@@ -13,6 +13,11 @@ defmodule ConnectWeb.Schema.Types do
     field(:type, :integer)
   end
 
+  object :member do
+    field(:channel_id, :bigint)
+    field(:user_id, :integer)
+  end
+
   object :message do
     field(:id, :bigint)
     field(:channel_id, :bigint)

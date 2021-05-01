@@ -65,11 +65,11 @@ defmodule Mix.Tasks.Connect.CreateSchema do
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.channel_members(
-        user_id bigint,
         channel_id bigint,
+        user_id bigint,
         created_at timestamp,
-        PRIMARY KEY(user_id, channel_id)
-      ) WITH CLUSTERING ORDER BY (channel_id DESC);
+        PRIMARY KEY(channel_id, user_id)
+      );
       """,
       """
       CREATE TABLE IF NOT EXISTS #{keyspace}.messages(
