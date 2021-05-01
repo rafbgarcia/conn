@@ -12,9 +12,6 @@ defmodule ConnectWeb.GraphqlContext do
     Absinthe.Plug.put_options(conn, context: context)
   end
 
-  @doc """
-  Return the current user context based on the authorization header
-  """
   def build_context("Bearer " <> token) do
     with {:ok, current_user} <- authorize(token) do
       %{current_user: current_user}
