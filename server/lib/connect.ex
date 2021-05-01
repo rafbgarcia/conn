@@ -11,6 +11,26 @@ defmodule Connect do
     |> Repo.one()
   end
 
+  def channels_for(user, limit \\ 50) do
+    Db.ChannelMember
+    |> select([:channel_id])
+    |> where(user_id: user.id)
+    |> limit(limit)
+    |> Repo.all()
+    |> case do
+      [] ->
+        []
+
+      channel_members ->
+        channel_ids = Enum.map(channel_members, & &1.channel_id)
+
+        Db.Channel
+        |> where(server_id: user.server_id)
+        |> where(id: channel_ids)
+        |> Repo.all()
+    end
+  end
+
   def channel_messages(channel_id, limit \\ 50) do
     Db.Snowflake.bucket_range(channel_id)
     |> Enum.reduce_while([], fn bucket, messages ->

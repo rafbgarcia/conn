@@ -35,6 +35,13 @@ defmodule Connect.Factory do
     |> to_struct(Db.Channel)
   end
 
+  def channel_member(attrs \\ %{}) do
+    attrs
+    |> Map.put(:channel_id, attrs[:channel_id] || Db.Snowflake.new())
+    |> Map.put(:user_id, attrs[:user_id] || sequence(:user_id))
+    |> to_struct(Db.ChannelMember)
+  end
+
   def message(attrs \\ %{}) do
     attrs
     |> Map.put(:channel_id, attrs[:channel_id] || Db.Snowflake.new())
