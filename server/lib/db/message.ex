@@ -22,7 +22,7 @@ defmodule Db.Message do
     attrs =
       attrs
       |> Map.put(:id, id)
-      |> Map.put(:bucket, Db.Snowflake.bucket(id))
+      |> Map.put(:bucket, attrs[:bucket] || Db.Snowflake.bucket(id))
       |> Map.put(:created_at, DateTime.utc_now())
 
     cast(%Message{}, attrs, [

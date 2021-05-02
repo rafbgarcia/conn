@@ -4,7 +4,7 @@ defmodule Connect.ConnectTest do
 
   describe ".channel_messages" do
     test "returns channel's messages" do
-      channel_id = build(:channel).id
+      channel_id = Db.Snowflake.new()
       insert(:message, channel_id: channel_id)
       insert(:message, channel_id: channel_id)
 
@@ -13,14 +13,17 @@ defmodule Connect.ConnectTest do
     end
 
     test "sorts by latest messages, even when fetching from different buckets" do
-      channel = build(:channel) |> Map.put(:id, Db.Snowflake.gen_buckets_diff_id(1)) |> insert
+      channel = insert(:channel, id: Db.Snowflake.gen_buckets_diff_id(1))
 
       Enum.each(0..6, fn i ->
         id = Db.Snowflake.gen_buckets_diff_id(floor(i / 3) + 1)
 
-        build(:message, channel_id: channel.id, content: "msg #{i}", author_id: 2)
-        |> Map.put(:bucket, Db.Snowflake.bucket(id))
-        |> insert
+        insert(:message,
+          channel_id: channel.id,
+          content: "msg #{i}",
+          author_id: 2,
+          bucket: Db.Snowflake.bucket(id)
+        )
       end)
 
       messages =

@@ -24,7 +24,7 @@ defmodule Db.Channel do
 
     data =
       attrs
-      |> Map.put(:id, Db.Snowflake.new())
+      |> Map.put(:id, attrs[:id] || Db.Snowflake.new())
 
     cast(%Channel{}, data, permitted_attrs)
     |> validate_required(permitted_attrs)

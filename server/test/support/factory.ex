@@ -28,6 +28,7 @@ defmodule Connect.Factory do
 
   def channel(attrs \\ %{}) do
     attrs
+    |> Map.put(:id, attrs[:id] || Db.Snowflake.new())
     |> Map.put(:server_id, attrs[:server_id] || sequence(:user_id))
     |> Map.put(:owner_id, attrs[:owner_id] || sequence(:user_id))
     |> Map.put(:name, attrs[:name] || sequence(:channel_name, &"Channel #{&1}"))
@@ -53,6 +54,7 @@ defmodule Connect.Factory do
 
   def thread_message(attrs \\ %{}) do
     attrs
+    |> Map.put(:content, attrs[:content] || sequence(:content, &"msg #{&1}"))
     |> Map.put(:channel_id, attrs[:channel_id] || Db.Snowflake.new())
     |> Map.put(:parent_message_id, attrs[:parent_message_id] || Db.Snowflake.new())
     |> Map.put(:author_id, attrs[:author_id] || sequence(:user_id))
@@ -80,7 +82,7 @@ defmodule Connect.Factory do
   # Private
 
   defp to_struct(attrs, schema) do
-    struct(schema, schema.new(attrs).changes)
+    schema.new(attrs)
   end
 
   defp sequence(name, fun \\ & &1) do
