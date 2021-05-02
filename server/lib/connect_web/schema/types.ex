@@ -2,7 +2,7 @@ defmodule ConnectWeb.Schema.Types do
   use Absinthe.Schema.Notation
 
   object :account do
-    field(:token, :string)
+    field(:token, non_null(:string))
   end
 
   enum :channel_type do
