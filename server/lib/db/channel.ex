@@ -4,13 +4,10 @@ defmodule Db.Channel do
 
   alias Db.{Channel}
 
-  @types %{
-    private: 0,
-    public: 1,
-    broadcasting: 2,
-    direct: 3,
-    group: 4
-  }
+  @types ConnectWeb.Schema.__absinthe_type__(:channel_type).values
+         |> Enum.reduce(%{}, fn {type, field}, acc ->
+           Map.put(acc, type, field.value)
+         end)
 
   @primary_key [:server_id, :id]
 
@@ -19,7 +16,7 @@ defmodule Db.Channel do
     field(:id, :integer)
     field(:owner_id, :integer)
     field(:name, :string)
-    field(:type, :integer)
+    field(:type, :string)
   end
 
   def new(attrs) do
@@ -31,6 +28,7 @@ defmodule Db.Channel do
 
     cast(%Channel{}, data, permitted_attrs)
     |> validate_required(permitted_attrs)
+    |> validate_inclusion(:type, Map.values(@types))
   end
 
   def types, do: @types

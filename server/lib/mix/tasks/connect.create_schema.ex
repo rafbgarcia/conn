@@ -64,7 +64,7 @@ defmodule Mix.Tasks.Connect.CreateSchema do
         id bigint,
         name text,
         topic text,
-        type int,
+        type text,
         created_at timestamp,
         edited_at timestamp,
         PRIMARY KEY(server_id, id)

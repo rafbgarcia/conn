@@ -5,12 +5,20 @@ defmodule ConnectWeb.Schema.Types do
     field(:token, :string)
   end
 
+  enum :channel_type do
+    value(:broadcasting, as: "BROADCASTING")
+    value(:direct, as: "DIRECT")
+    value(:group, as: "GROUP")
+    value(:private, as: "PRIVATE")
+    value(:public, as: "PUBLIC")
+  end
+
   object :channel do
     field(:server_id, :bigint)
     field(:id, :bigint)
     field(:name, :string)
     field(:owner_id, :integer)
-    field(:type, :integer)
+    field(:type, :channel_type)
   end
 
   object :member do

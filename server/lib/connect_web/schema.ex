@@ -35,7 +35,7 @@ defmodule ConnectWeb.Schema do
     field :create_channel, :channel do
       arg(:server_id, non_null(:bigint))
       arg(:name, non_null(:string))
-      arg(:type, non_null(:integer))
+      arg(:type, non_null(:channel_type))
 
       resolve(&ConnectWeb.Resolvers.Channels.create/3)
     end
