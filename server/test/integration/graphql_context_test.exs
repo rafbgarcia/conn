@@ -18,4 +18,12 @@ defmodule Connect.GraphqlContextTest do
 
     assert %{current_user: user} == ConnectWeb.GraphqlContext.build_context(authorization_header)
   end
+
+  test "returns empty if no token is given" do
+    assert %{} == ConnectWeb.GraphqlContext.build_context("")
+  end
+
+  test "init" do
+    assert [opt: 1] == ConnectWeb.GraphqlContext.init(opt: 1)
+  end
 end
