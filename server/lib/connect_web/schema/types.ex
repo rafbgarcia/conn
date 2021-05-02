@@ -46,14 +46,14 @@ defmodule ConnectWeb.Schema.Types do
   end
 
   object :badge do
-    field(:channel_id, :bigint)
-    field(:count, :integer)
-    field(:mentions_me, :boolean)
-    field(:mentions_all, :boolean)
+    field(:channel_id, non_null(:bigint))
+    field(:count, non_null(:integer))
+    field(:mentions_me, non_null(:boolean))
+    field(:mentions_all, non_null(:boolean))
   end
 
   object :new_message do
-    field(:message, :message)
+    field(:message, non_null(:message))
     field(:bookmark, :string)
     field(:notification, :string)
 
