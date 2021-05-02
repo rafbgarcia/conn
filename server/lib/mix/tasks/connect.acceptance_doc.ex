@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Connect.AcceptanceDoc do
   def run(_args) do
     Mix.Task.run("app.start")
 
-    capture_io(fn -> Mix.Task.run("test", ["--trace", "--seed=1", "test/graphql"]) end)
+    capture_io(fn -> Mix.Task.run("test", ["--trace", "--seed=0", "test/graphql"]) end)
     |> sanitize_tests()
     |> save_to_file("Acceptance")
   end
