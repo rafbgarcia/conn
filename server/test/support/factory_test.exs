@@ -8,7 +8,7 @@ defmodule Connect.FactoryTest do
   end
 
   test "builds factory by name" do
-    user = build(:user, name: "Chico")
+    user = build(:user, name: "Chico").changes
 
     assert is_integer(user.id)
     assert is_integer(user.server_id)
@@ -29,6 +29,7 @@ defmodule Connect.FactoryTest do
   test "inserts factory by struct" do
     user = build(:user, name: "Chico")
     insert(user)
+    user = struct(%Db.User{}, user.changes)
 
     db_user = Db.User |> where(server_id: user.server_id) |> where(id: user.id) |> Db.Repo.one()
     assert schema_equal(db_user, user)
@@ -37,6 +38,6 @@ defmodule Connect.FactoryTest do
   test "allows overriding params" do
     msg = build(:message, channel_id: "1")
 
-    assert msg.channel_id == 1
+    assert msg.changes.channel_id == 1
   end
 end
