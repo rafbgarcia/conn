@@ -60,6 +60,31 @@ defmodule Connect.Graphql.CreateMessageMutationTest do
     assert message["authorId"] == user.id
   end
 
+  test "users can send messages with emojis" do
+    user = insert(:user)
+    channel = insert(:channel)
+    insert(:channel_member, channel_id: channel.id, user_id: user.id)
+
+    query = """
+    mutation {
+      message: createMessage(channelId: "#{channel.id}", content: "Viva la vida 😸") {
+        id
+        channelId
+        authorId
+        content
+      }
+    }
+    """
+
+    assert_response_matches(query, context: %{current_user: user}) do
+      %{"message" => %{"content" => "Viva la vida 😸", "id" => message_id}}
+    end
+
+    message = Connect.get_message(channel.id, String.to_integer(message_id))
+
+    assert message.content == "Viva la vida 😸"
+  end
+
   test "users can't send thread messages in channels they are not members" do
     user = insert(:user)
     channel = insert(:channel)

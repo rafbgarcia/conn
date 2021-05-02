@@ -6,7 +6,10 @@ defmodule Db.Snowflake do
   end
 
   def bucket(id) do
-    Snowflake.Util.bucket(@bucket_size, :days, id)
+    cond do
+      is_integer(id) -> Snowflake.Util.bucket(@bucket_size, :days, id)
+      true -> raise "ID must be an integer"
+    end
   end
 
   def bucket_range(start_id, end_id \\ nil) do
