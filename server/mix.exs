@@ -11,7 +11,7 @@ defmodule Connect.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      preferred_cli_env: [tests_doc: :test],
+      preferred_cli_env: ["connect.test_coverage_doc": :test, "connect.acceptance_doc": :test],
       test_coverage: [ignore_modules: ignore_modules()]
     ]
   end
@@ -65,8 +65,7 @@ defmodule Connect.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "connect.create_schema"],
-      test_watch: ["test.watch --stale --max-failures 1"],
-      tests_doc: ["connect.tests_doc"]
+      test_watch: ["test.watch --stale --max-failures 1"]
     ]
   end
 
@@ -74,7 +73,8 @@ defmodule Connect.MixProject do
     [
       Mix.Tasks.Connect.CreateSchema,
       Mix.Tasks.Connect.RecreateSchema,
-      Mix.Tasks.Connect.TestsDoc,
+      Mix.Tasks.Connect.AcceptanceDoc,
+      Mix.Tasks.Connect.TestCoverageDoc,
       Connect.Application,
       ConnectWeb,
       ConnectWeb.ErrorHelpers,

@@ -1,10 +1,6 @@
 Percentage | Module
 -----------|--------------------------
-0.00%| Db.Server
-20.00%| Db.Repo
-50.00%| ConnectWeb.GraphqlContext
-66.67%| Db.ThreadMessage
-72.73%| Db.Snowflake
+80.00%| ConnectWeb.GraphqlContext
 83.33%| Db.ChannelMember
 100.00%| Connect
 100.00%| ConnectWeb.Guardian
@@ -17,6 +13,10 @@ Percentage | Module
 100.00%| Db.Account
 100.00%| Db.Channel
 100.00%| Db.Message
+100.00%| Db.Repo
+100.00%| Db.Server
+100.00%| Db.Snowflake
+100.00%| Db.ThreadMessage
 100.00%| Db.User
 -----------|--------------------------
-85.61%| Total
+97.86%| Total

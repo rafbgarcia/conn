@@ -1,39 +1,46 @@
 ### Scenario: User Login
-
-  * returns access token
-  * fails for invalid password
+ 
+  * returns the access token, used to identify the user on upcoming requests 
+  * returns an error when user's password is incorrect 
 
 ### Scenario: Create messages
+ 
+  * users can create thread messages in channels they are members 
+  * users can't send messages in channels they are not members 
+  * users can create messages in channels they are members 
+  * non-authenticated users can't create messages 
+  * users can't send thread messages in channels they are not members 
 
-  * creates a message that points to another message
-  * fails if user has no access to the channel
-  * creates a message for the current user in a given channel
-  * checks that message's channel and given channel are the same
-  * fails when for unauthorized users
+### Scenario: Fetch messages of a thread
+ 
+  * returns the last 25 messages of a thread 
+  * user must be a member of the channel to see thread messages 
 
 ### Scenario: Get current user's channels
-
-  * returns channels that the user is a member of
-  * returns empty when the user has no channels
-
-### Scenario: Add members to a channel
-
-  * admins can add members
-  * non-admins can't add members
+ 
+  * returns channels that the user is a member of 
+  * returns empty when the user has no channels 
 
 ### Scenario: Create a new channel
+ 
+  * users can create a new private channel 
+  * the channel creator is added as an admin member 
 
-  * creates a private channel
-  * adds the owner as a member
-
-### Scenario: Real-time channel messages
-
-  * new messages can be subscribed to
-
-### Scenario: Edit messages
-
-  * Edits a message
+### Scenario: Add members to a channel
+ 
+  * admins can add members 
+  * non-admins can't add members 
 
 ### Scenario: Fetch a channel's messages
+ 
+  * returns the last 50 messages of the channel 
+  * user must be a member of the channel to see messages 
 
-  * fetch thread messages sorted by most recent
+### Scenario: Edit messages
+ 
+  * users can edit their own messages 
+  * users can't edit others' messages 
+
+### Scenario: Real-time channel messages
+ 
+  * users receive new messages in real-time for their channels 

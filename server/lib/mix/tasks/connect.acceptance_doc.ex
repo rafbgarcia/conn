@@ -1,27 +1,17 @@
-ExUnit.start()
-
-defmodule Mix.Tasks.Connect.TestsDoc do
+defmodule Mix.Tasks.Connect.AcceptanceDoc do
   use Mix.Task
 
-  @shortdoc "Generates test doc"
+  @shortdoc "Generates Acceptance doc under the docs folder"
+
+  ExUnit.start()
   import ExUnit.CaptureIO
 
   def run(_args) do
     Mix.Task.run("app.start")
 
-    capture_io(fn ->
-      Mix.Task.run("test", [
-        "--trace",
-        "--seed=1",
-        "test/graphql"
-      ])
-    end)
+    capture_io(fn -> Mix.Task.run("test", ["--trace", "--seed=1", "test/graphql"]) end)
     |> sanitize_tests()
     |> save_to_file("Acceptance")
-
-    capture_io(fn -> Mix.Task.run("test", ["--cover"]) end)
-    |> sanitize_coverage()
-    |> save_to_file("Test Coverage")
   end
 
   defp sanitize_tests(text) do
@@ -43,15 +33,6 @@ defmodule Mix.Tasks.Connect.TestsDoc do
     |> Enum.join("\n")
     |> String.replace(~r/[\[\(][^\n]*/, "")
     |> String.replace(~r/test /i, "")
-  end
-
-  defp sanitize_coverage(text) do
-    text
-    |> String.replace("", "")
-    |> String.replace(~r/\[\d*m */, "")
-    |> String.split("\n")
-    |> Enum.slice(2..-3)
-    |> Enum.join("\n")
   end
 
   defp save_to_file(output, name) do
