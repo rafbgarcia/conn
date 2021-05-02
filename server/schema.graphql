@@ -1,0 +1,86 @@
+"Represents a schema"
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+  subscription: RootSubscriptionType
+}
+
+type NewMessage {
+  message: Message
+  bookmark: String
+  notification: String
+  badges: Badge
+}
+
+type Account {
+  token: String
+}
+
+type RootSubscriptionType {
+  newMessage(channelIds: [String!]): NewMessage
+}
+
+type Message {
+  id: Bigint!
+  channelId: Bigint!
+  authorId: Int!
+  content: String!
+  createdAt: String!
+  edited: Boolean!
+  parentMessageId: Bigint
+  editedAt: String
+}
+
+enum ChannelType {
+  BROADCASTING
+  DIRECT
+  GROUP
+  PRIVATE
+  PUBLIC
+}
+
+type RootMutationType {
+  login(serverId: Bigint!, login: String!, password: String!): Account
+  createChannel(serverId: Bigint!, name: String!, type: ChannelType!): Channel
+  createMembers(channelId: Bigint!, memberIds: [Int]!): [Member]
+  createMessage(channelId: Bigint!, parentMessageId: Bigint, content: String!): Message
+  editMessage(channelId: Bigint!, messageId: Bigint!, content: String!): Message
+}
+
+type Channel {
+  serverId: Bigint
+  id: Bigint
+  name: String
+  ownerId: Int
+  type: ChannelType
+}
+
+type RootQueryType {
+  "Get user's channels"
+  channels: [Channel]
+
+  messages(channelId: Bigint!): [Message]
+
+  threadMessages(channelId: Bigint!, parentMessageId: Bigint!): [Message]
+}
+
+type Badge {
+  channelId: Bigint
+  count: Int
+  mentionsMe: Boolean
+  mentionsAll: Boolean
+}
+
+"""
+Represents a 64 bit number, appears in JSON responses as a
+UTF-8 String due to Javascript's lack of support for numbers > 53-bits.
+Its parsed again to an integer after received.
+"""
+scalar Bigint
+
+type Member {
+  channelId: Bigint!
+  userId: Int!
+  admin: Boolean!
+  broadcaster: Boolean!
+}
