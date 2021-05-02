@@ -14,11 +14,11 @@ defmodule ConnectWeb.Schema.Types do
   end
 
   object :channel do
-    field(:server_id, :bigint)
-    field(:id, :bigint)
-    field(:name, :string)
-    field(:owner_id, :integer)
-    field(:type, :channel_type)
+    field(:server_id, non_null(:bigint))
+    field(:id, non_null(:bigint))
+    field(:name, non_null(:string))
+    field(:owner_id, non_null(:integer))
+    field(:type, non_null(:channel_type))
   end
 
   object :member do

@@ -18,9 +18,13 @@ defmodule Connect.Graphql.ChannelsQueryTest do
     server_id = Db.Snowflake.new()
     user = insert(:user, server_id: server_id)
 
-    channel1 = insert(:channel, server_id: server_id, user_id: user.id, name: "Rebels", type: 0)
-    insert(:channel, server_id: server_id, user_id: user.id, name: "Gabe", type: 1)
-    channel3 = insert(:channel, server_id: server_id, user_id: user.id, name: "Gabe", type: 1)
+    channel1 =
+      insert(:channel, server_id: server_id, user_id: user.id, name: "Rebels", type: "PRIVATE")
+
+    insert(:channel, server_id: server_id, user_id: user.id, name: "Gabe", type: "DIRECT")
+
+    channel3 =
+      insert(:channel, server_id: server_id, user_id: user.id, name: "Gabe", type: "DIRECT")
 
     insert(:channel_member, channel_id: channel1.id, user_id: user.id)
     insert(:channel_member, channel_id: channel3.id, user_id: user.id)
@@ -28,10 +32,6 @@ defmodule Connect.Graphql.ChannelsQueryTest do
     assert_data_matches(query(), context: %{current_user: user}) do
       %{"channels" => channels}
     end
-
-    assert Db.Repo.count(Db.Channel) == 3
-    assert Db.Repo.count(Db.ChannelMember) == 2
-    assert length(channels) == 2
 
     assert_lists_equal(Enum.map(channels, & &1["id"]), [
       "#{channel1.id}",
